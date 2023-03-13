@@ -1,9 +1,10 @@
 package main
 
 // An example Bubble Tea server.
-// Run it, then use a seperate terminal with the command "ssh -p 12345 localhost"
+// "ssh -p 1234 localhost"
 
 import (
+	"DAB-SSH/models"
 	"context"
 	"fmt"
 	"log"
@@ -22,7 +23,7 @@ import (
 // Sets the host server as local on the port 1234
 const (
 	host = "localhost"
-	port = 12345
+	port = 1234
 )
 
 func main() {
@@ -60,51 +61,15 @@ func main() {
 }
 
 // You can wire any Bubble Tea model up to the middleware with a function that
-// handles the incoming ssh.Session. Here we just grab the terminal info and
-// pass it to the new model. You can also return tea.ProgramOptions (such as
-// tea.WithAltScreen) on a session by session basis.
+// handles the incoming ssh.Session.
 func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
-	pty, _, active := s.Pty()
+	_, _, active := s.Pty()
 	if !active {
-		wish.Fatalln(s, "no active terminal, skipping")
+		wish.Fatalln(s, "Could not start ssh session") // Error if ssh session doesnt start
 		return nil, nil
 	}
-	m := model{
-		term:   pty.Term,
-		width:  pty.Window.Width,
-		height: pty.Window.Height,
-	}
-	return m, []tea.ProgramOption{tea.WithAltScreen()}
-}
 
-// Basic tea model to return terminal information
-type model struct {
-	term   string
-	width  int
-	height int
-}
+	m := models.CreateTitlePage() // Sets m as our created title page
 
-func (m model) Init() tea.Cmd {
-	return nil
-}
-
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg := msg.(type) {
-	case tea.WindowSizeMsg:
-		m.height = msg.Height
-		m.width = msg.Width
-	case tea.KeyMsg:
-		switch msg.String() {
-		case "q", "ctrl+c":
-			return m, tea.Quit
-		}
-	}
-	return m, nil
-}
-
-func (m model) View() string {
-	s := "Your term is %s\n"
-	s += "Your window size is x: %d y: %d\n\n"
-	s += "Press 'q' to quit\n"
-	return fmt.Sprintf(s, m.term, m.width, m.height)
+	return m, []tea.ProgramOption{tea.WithAltScreen()} // Puts our program in full screen mode
 }
