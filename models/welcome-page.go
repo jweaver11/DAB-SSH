@@ -5,6 +5,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 // Our title page as a struct outlining the elements of our title page
@@ -45,6 +46,14 @@ func (t TitlePage) View() string {
 	var s string
 
 	s += "  " + styling.TitleStyle.Render(t.title) + "\n\n"
+
+	for i := range t.navBar {
+		if i == 0 {
+			s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render(t.navBar[i])
+		} else {
+			s += styling.NavBarStyle.UnsetForeground().Render(t.navBar[i])
+		}
+	}
 
 	s += t.pirate + "\n\n"
 
