@@ -2,10 +2,15 @@ package styling
 
 import "github.com/charmbracelet/lipgloss"
 
-var TitleStyle = lipgloss.NewStyle().
+var HeaderStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("12")).
 	Background(lipgloss.Color("3"))
 
-var FinalStyle = lipgloss.NewStyle().
+var BorderStyle = lipgloss.NewStyle().
 	PaddingLeft(2).
 	PaddingTop(1)
+
+var PirateStyle = lipgloss.NewStyle()
+
+var HelpBarStyle = lipgloss.NewStyle().
+	PaddingLeft(2)
