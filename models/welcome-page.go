@@ -1,6 +1,8 @@
 package models
 
 import (
+	"DAB-SSH/styling"
+
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -8,16 +10,19 @@ import (
 // Our title page as a struct outlining the elements of our title page
 type TitlePage struct {
 	title  string     // The title
-	navBar string     // The navigation bar below the title
+	navBar []string   // The navigation bar below the title
 	pirate string     // The pirate picture
 	help   help.Model // The help bar at the bottom of the page
 }
 
 // Creates our title page and returns it to be used later
 func CreateTitlePage() TitlePage {
+	title := "Digital Art Brokers"
+
+	navBar := []string{"DAB", "Projects"}
 	return TitlePage{
-		title:  "cheese",
-		navBar: "chedda",
+		title:  title,
+		navBar: navBar,
 		pirate: "mozzarella",
 		help:   help.Model{},
 	}
@@ -39,9 +44,7 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (t TitlePage) View() string {
 	var s string
 
-	s += t.title + "\n\n"
-
-	s += t.navBar + "\n\n"
+	s += "  " + styling.TitleStyle.Render(t.title) + "\n\n"
 
 	s += t.pirate + "\n\n"
 
