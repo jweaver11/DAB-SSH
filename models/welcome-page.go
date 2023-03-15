@@ -1,5 +1,8 @@
 package models
 
+// Make description comment at top of each file
+// Use other method to get terminal size, this one too smol
+
 import (
 	"DAB-SSH/styling"
 
@@ -56,10 +59,21 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 
 		// Sets the help model and main model width for sizing later
-		t.help.Width = msg.Width - styling.HelpBarStyle.GetPaddingLeft()
+		t.help.Width = msg.Width
 
 		// Sets terminal width and height
 		t.termWidth, t.termHeight, _ = term.GetSize(0)
+
+	// Handles all keyboard presses
+	case tea.KeyMsg:
+
+		// Converts the press into a string
+		switch msg.String() {
+
+		// When q pressed, quit
+		case "q":
+			return t, tea.Quit
+		}
 	}
 
 	return t, cmd
@@ -91,7 +105,7 @@ func (t TitlePage) View() string {
 	s += styling.HelpBarStyle.Render(fullHelpView)
 
 	// Returns our string model according to the terminal size with some padding
-	return styling.BorderStyle.Width(t.termWidth).Height(t.termHeight).Render(s)
+	return styling.BorderStyle.Width(t.termWidth + 20).Height(t.termHeight).Render(s)
 }
 
 // Pirate image
@@ -109,8 +123,8 @@ var pirate string = `
 				#
 				#
 ##################################
- ##                           ##
-   ##                       ##
-	 ##                   ##
-	   ##               ##
+ ###############################
+   ###########################
+	 #######################
+	   ###################
 		 ###############`
