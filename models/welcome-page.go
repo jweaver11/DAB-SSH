@@ -18,7 +18,7 @@ type TitlePage struct {
 	navBar                []string   // The navigation bar below the title
 	help                  help.Model // The help bar at the bottom of the page
 	keys                  keyMap     // Key map for our help model
-	termWidth, termHeight int        //terminal width and height
+	termWidth, termHeight int        // Terminal width and height
 }
 
 // Creates our title page and returns it to be used later
@@ -38,6 +38,7 @@ func CreateTitlePage() TitlePage {
 		title:      title,
 		navBar:     navBar,
 		help:       help.New(),
+		keys:       keys,
 		termWidth:  TW,
 		termHeight: TH,
 	}
@@ -45,11 +46,14 @@ func CreateTitlePage() TitlePage {
 
 // Initializes our struct as a bubble tea model
 func (t TitlePage) Init() tea.Cmd {
+	// Returns no command
 	return nil
 }
 
 // Updates our model everytime a key event happens, mainly window resizes and key presses
 func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+
+	// Sets cmd as a tea command that can be easily changed later
 	var cmd tea.Cmd
 
 	// Sets msg as a switch for all events
@@ -59,7 +63,7 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 
 		// Sets the help model and main model width for sizing later
-		t.help.Width = msg.Width
+		t.help.Width = msg.Width - styling.HelpBarStyle.GetPaddingLeft()
 
 		// Sets terminal width and height
 		t.termWidth, t.termHeight, _ = term.GetSize(0)
@@ -73,6 +77,10 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// When q pressed, quit
 		case "q":
 			return t, tea.Quit
+
+		// When ? pressed, switch between short help view and full help view
+		case "?":
+			t.help.ShowAll = !t.help.ShowAll
 		}
 	}
 
@@ -100,12 +108,13 @@ func (t TitlePage) View() string {
 	// Adds the pirate picture
 	s += "\n\n" + pirate + "\n\n"
 
+	// Adds the help bar at the bottom
 	fullHelpView := t.help.View(t.keys)
 
-	s += styling.HelpBarStyle.Render(fullHelpView)
+	s += styling.HelpBarStyle.Render(fullHelpView) + "\n"
 
 	// Returns our string model according to the terminal size with some padding
-	return styling.BorderStyle.Width(t.termWidth + 20).Height(t.termHeight).Render(s)
+	return styling.BorderStyle.Width(t.termWidth).Height(t.termHeight).Render(s)
 }
 
 // Pirate image
