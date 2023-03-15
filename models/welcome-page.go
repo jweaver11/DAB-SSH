@@ -2,7 +2,6 @@ package models
 
 import (
 	"DAB-SSH/styling"
-	"fmt"
 
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
@@ -91,9 +90,8 @@ func (t TitlePage) View() string {
 
 	s += styling.HelpBarStyle.Render(fullHelpView)
 
-	fmt.Println(pirate)
-
-	return styling.BorderStyle.Render(s)
+	// Returns our string model according to the terminal size with some padding
+	return styling.BorderStyle.Width(t.termWidth).Height(t.termHeight).Render(s)
 }
 
 // Pirate image
