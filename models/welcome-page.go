@@ -28,7 +28,7 @@ func CreateTitlePage() TitlePage {
 	title := "Digital Art Brokers"
 
 	// Sets the navbar values
-	navBar := []string{"DAB", "Projects"}
+	navBar := []string{"• DAB", "Projects"}
 
 	// Returns our created model
 	return TitlePage{
@@ -90,27 +90,34 @@ func (t TitlePage) View() string {
 	var s string
 
 	// Adds the header
-	s += "  " + styling.HeaderStyle.Render(t.title) + "\n\n"
+	s += styling.HeaderStyle.Render(t.title) + "\n"
 
 	// Adds the navbar and colors the selected page
 	for i := range t.navBar {
 		if i == 0 {
-			s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render(t.navBar[i])
+			s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render(t.navBar[i]) + "		"
 		} else {
-			s += styling.NavBarStyle.UnsetForeground().Render(t.navBar[i])
+			s += styling.NavBarStyle.UnsetForeground().Render(t.navBar[i]) + "		"
 		}
 	}
 
 	// Adds the pirate picture
-	s += "\n\n" + pirate + "\n\n"
+	s += styling.PirateStyle.Render(pirate) + "\n"
 
 	// Adds the help bar at the bottom
 	fullHelpView := t.help.View(t.keys)
 
-	s += styling.HelpBarStyle.Render(fullHelpView) + "\n"
+	s += styling.HelpBarStyle.Render(fullHelpView)
 
-	// Returns our string model according to the terminal size with some padding
-	return styling.BorderStyle.Width(t.termWidth).Height(t.termHeight).Render(s)
+	// if termWidth < modelWidth use minWidth else use modelWidth
+
+	t.modelWidth = 53
+
+	if t.termWidth <= t.modelWidth {
+		return styling.BorderStyle.Width(t.modelWidth).Height(t.termHeight).Render(s)
+	} else {
+		return styling.BorderStyle.Width(t.termWidth).Height(t.termHeight).Render(s)
+	}
 }
 
 // Pirate image
