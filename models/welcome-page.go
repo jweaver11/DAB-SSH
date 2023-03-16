@@ -28,7 +28,7 @@ func CreateTitlePage() TitlePage {
 	title := "Digital Art Brokers"
 
 	// Sets the navbar values
-	navBar := []string{"• DAB", "Projects"}
+	navBar := []string{"DAB", "Projects"}
 
 	// Returns our created model
 	return TitlePage{
@@ -90,15 +90,42 @@ func (t TitlePage) View() string {
 	var s string
 
 	// Adds the header
-	s += styling.HeaderStyle.Render(t.title) + "\n"
+	s += styling.HeaderStyle.Render(t.title) + "\n\n"
 
 	// Adds the navbar and colors the selected page
 	for i := range t.navBar {
 		if i == 0 {
-			s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render(t.navBar[i]) + "		"
+			s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render("• "+t.navBar[i]) + "	"
 		} else {
-			s += styling.NavBarStyle.UnsetForeground().Render(t.navBar[i]) + "		"
+			s += styling.NavBarStyle.UnsetForeground().Render("  "+t.navBar[i]) + "		\n"
 		}
+	}
+
+	t.modelWidth = 53
+	t.modelHeight = 28
+
+	minHeight := 18
+
+	var pirate string
+
+	if t.termHeight < t.modelHeight {
+		pirate = lilPirate
+	} else {
+		pirate = bigPirate
+	}
+
+	// Size to be decided later and returned for model
+	var width, height int
+
+	if t.termWidth <= t.modelWidth {
+		width = t.modelWidth
+	} else {
+		width = t.termWidth
+	}
+	if t.termHeight <= minHeight {
+		height = minHeight
+	} else {
+		height = t.termHeight
 	}
 
 	// Adds the pirate picture
@@ -109,19 +136,11 @@ func (t TitlePage) View() string {
 
 	s += styling.HelpBarStyle.Render(fullHelpView)
 
-	// if termWidth < modelWidth use minWidth else use modelWidth
-
-	t.modelWidth = 53
-
-	if t.termWidth <= t.modelWidth {
-		return styling.BorderStyle.Width(t.modelWidth).Height(t.termHeight).Render(s)
-	} else {
-		return styling.BorderStyle.Width(t.termWidth).Height(t.termHeight).Render(s)
-	}
+	return styling.BorderStyle.Width(width).Height(height).Render(s)
 }
 
 // Pirate image
-var pirate string = `
+var bigPirate string = `
 				##
 				#####
 				########
@@ -140,3 +159,15 @@ var pirate string = `
 	 #######################
 	   ###################
 		 ###############`
+
+var lilPirate string = `
+				#
+				###
+				#####
+				###
+				#
+				#
+				#
+		#################
+		  #############
+			#########`
