@@ -9,16 +9,16 @@ import (
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"golang.org/x/term"
 )
 
 // Our title page as a struct outlining the elements of our title page
 type TitlePage struct {
-	title                 string     // The title
-	navBar                []string   // The navigation bar below the title
-	help                  help.Model // The help bar at the bottom of the page
-	keys                  keyMap     // Key map for our help model
-	termWidth, termHeight int        // Terminal width and height
+	title                   string     // The title
+	navBar                  []string   // The navigation bar below the title
+	help                    help.Model // The help bar at the bottom of the page
+	keys                    keyMap     // Key map for our help model
+	termWidth, termHeight   int        // Size of the terminal
+	modelWidth, modelHeight int        // Size of the model
 }
 
 // Creates our title page and returns it to be used later
@@ -27,20 +27,15 @@ func CreateTitlePage() TitlePage {
 	// Sets the title
 	title := "Digital Art Brokers"
 
-	// Set terminal width and height
-	TW, TH, _ := term.GetSize(0)
-
 	// Sets the navbar values
 	navBar := []string{"DAB", "Projects"}
 
 	// Returns our created model
 	return TitlePage{
-		title:      title,
-		navBar:     navBar,
-		help:       help.New(),
-		keys:       keys,
-		termWidth:  TW,
-		termHeight: TH,
+		title:  title,
+		navBar: navBar,
+		help:   help.New(),
+		keys:   keys,
 	}
 }
 
@@ -66,7 +61,8 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		t.help.Width = msg.Width - styling.HelpBarStyle.GetPaddingLeft()
 
 		// Sets terminal width and height
-		t.termWidth, t.termHeight, _ = term.GetSize(0)
+		t.termWidth = msg.Width
+		t.termHeight = msg.Height
 
 	// Handles all keyboard presses
 	case tea.KeyMsg:
