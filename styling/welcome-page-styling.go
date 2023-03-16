@@ -3,13 +3,11 @@ package styling
 import "github.com/charmbracelet/lipgloss"
 
 var HeaderStyle = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("12")).
-	Background(lipgloss.Color("3")).
-	PaddingTop(1).
-	PaddingBottom(1)
+	Foreground(lipgloss.Color("#000000")). //12
+	Background(lipgloss.Color("15"))
 
 var PirateStyle = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("55")).
+	Foreground(lipgloss.Color("50")).
 	PaddingTop(2).
 	PaddingBottom(2)
 
@@ -18,4 +16,5 @@ var HelpBarStyle = lipgloss.NewStyle().
 
 var BorderStyle = lipgloss.NewStyle().
 	PaddingLeft(2).
+	PaddingTop(1).
 	Background(lipgloss.Color("#0c233b"))
