@@ -16,5 +16,4 @@ var HelpBarStyle = lipgloss.NewStyle().
 
 var BorderStyle = lipgloss.NewStyle().
 	PaddingLeft(2).
-	PaddingTop(1).
-	Background(lipgloss.Color("#0c233b"))
+	PaddingTop(1)
