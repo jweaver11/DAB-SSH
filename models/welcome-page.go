@@ -1,7 +1,8 @@
 package models
 
 // Make description comment at top of each file
-// Use other method to get terminal size, this one too smol
+// Move helpbar to always go to bottom
+// Bug switching between help model full view
 
 import (
 	"DAB-SSH/styling"
@@ -19,6 +20,7 @@ type TitlePage struct {
 	keys                    keyMap     // Key map for our help model
 	termWidth, termHeight   int        // Size of the terminal
 	modelWidth, modelHeight int        // Size of the model
+	minHeight               int        // Minimum size without model breaking
 }
 
 // Creates our title page and returns it to be used later
@@ -64,6 +66,13 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		t.termWidth = msg.Width
 		t.termHeight = msg.Height
 
+		// Height and width of the model at full size
+		t.modelWidth = 53
+		t.modelHeight = 30
+
+		// Sets the minimum height so model won't break
+		t.minHeight = 21
+
 	// Handles all keyboard presses
 	case tea.KeyMsg:
 
@@ -80,6 +89,7 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 
+	// Return our model and command
 	return t, cmd
 }
 
@@ -101,13 +111,10 @@ func (t TitlePage) View() string {
 		}
 	}
 
-	t.modelWidth = 53
-	t.modelHeight = 28
-
-	minHeight := 18
-
+	// Pirate string for easy return later
 	var pirate string
 
+	// Sets the pirate ship to big or small one based on terminal size
 	if t.termHeight < t.modelHeight {
 		pirate = lilPirate
 	} else {
@@ -117,13 +124,16 @@ func (t TitlePage) View() string {
 	// Size to be decided later and returned for model
 	var width, height int
 
+	// Logic for setting terminal width to not break model
 	if t.termWidth <= t.modelWidth {
 		width = t.modelWidth
 	} else {
 		width = t.termWidth
 	}
-	if t.termHeight <= minHeight {
-		height = minHeight
+
+	// Logic for setting terminal height to not break model
+	if t.termHeight <= t.minHeight {
+		height = t.minHeight
 	} else {
 		height = t.termHeight
 	}
@@ -134,6 +144,7 @@ func (t TitlePage) View() string {
 	// Adds the help bar at the bottom
 	fullHelpView := t.help.View(t.keys)
 
+	// Render help bar in correct styling
 	s += styling.HelpBarStyle.Render(fullHelpView)
 
 	return styling.BorderStyle.Width(width).Height(height).Render(s)
@@ -160,6 +171,7 @@ var bigPirate string = `
 	   ###################
 		 ###############`
 
+// Small Pirate image
 var lilPirate string = `
 				#
 				###
