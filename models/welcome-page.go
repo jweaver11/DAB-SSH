@@ -1,8 +1,11 @@
+/* This file controls the welcome page model, which is the page that
+users first see when they connect to the SSH server. The model contains the
+title of Digital Art Brokers, a navigation bar between the models, and a help bar
+at the bottom of the page*/
+
 package models
 
 // Make description comment at top of each file
-// Move helpbar to always go to bottom
-// Bug switching between help model full view
 
 import (
 	"DAB-SSH/styling"
@@ -24,7 +27,7 @@ type TitlePage struct {
 	minHeight               int        // Minimum size without model breaking
 }
 
-// Creates our title page and returns it to be used later
+// Creates our title page gives it values
 func CreateTitlePage() TitlePage {
 
 	// Sets the title
@@ -69,7 +72,7 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Height and width of the model at full size
 		t.modelWidth = 53
-		t.modelHeight = 32
+		//t.modelHeight = 32
 
 		// Sets the minimum height so model won't break
 		t.minHeight = 21
@@ -122,6 +125,9 @@ func (t TitlePage) View() string {
 		pirate = bigPirate
 	}
 
+	// Adds the pirate picture
+	s += styling.PirateStyle.Render(pirate) + "\n"
+
 	// Size to be decided later and returned for model
 	var width, height int
 
@@ -139,8 +145,7 @@ func (t TitlePage) View() string {
 		height = t.termHeight
 	}
 
-	// Adds the pirate picture
-	s += styling.PirateStyle.Render(pirate) + "\n"
+	t.modelHeight = height - strings.Count(s, "\n") - strings.Count("0", "\n")
 
 	// Adds the help bar at the bottom
 	fullHelpView := t.help.View(t.keys)
