@@ -6,20 +6,20 @@ import (
 
 // Sets a keymap struct to store the controls and key bind variables
 // So they can be called on later for the help view
-type keyMap struct {
+type WPkeyMap struct {
 	Help key.Binding
 	Quit key.Binding
 }
 
 // Built in function from the help package that shows our mini help view at the bottom of our active model
 // It is part of the key.Map interface
-func (k keyMap) ShortHelp() []key.Binding {
+func (k WPkeyMap) ShortHelp() []key.Binding {
 	return []key.Binding{k.Help, k.Quit}
 }
 
 // Built in function from the help package that shows our full help view at the bottom of our active model
 // It is part of the key.Map interface
-func (k keyMap) FullHelp() [][]key.Binding {
+func (k WPkeyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.Help, k.Quit}, // first row
 		{k.Help, k.Quit}, // second row
@@ -27,7 +27,7 @@ func (k keyMap) FullHelp() [][]key.Binding {
 }
 
 // Sets keys as our object using our keyMap struct from above
-var keys = keyMap{
+var keys = WPkeyMap{
 	Help: key.NewBinding( // Show full help view
 		key.WithKeys("?"),
 		key.WithHelp("?", "help"),
