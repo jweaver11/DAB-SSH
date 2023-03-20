@@ -3,8 +3,7 @@ package styling
 import "github.com/charmbracelet/lipgloss"
 
 var HeaderStyle = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("#000000")). //12
-	Background(lipgloss.Color("15"))
+	Foreground(lipgloss.Color("12"))
 
 var PirateStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("50")).
