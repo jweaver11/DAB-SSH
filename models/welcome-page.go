@@ -6,6 +6,7 @@ package models
 
 import (
 	"DAB-SSH/styling"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
@@ -17,7 +18,7 @@ type TitlePage struct {
 	title                   string     // The title
 	navBar                  []string   // The navigation bar below the title
 	help                    help.Model // The help bar at the bottom of the page
-	keys                    keyMap     // Key map for our help model
+	keys                    WPkeyMap   // Key map for our help model
 	termWidth, termHeight   int        // Size of the terminal
 	modelWidth, modelHeight int        // Size of the model
 	minHeight               int        // Minimum size without model breaking
@@ -68,7 +69,7 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Height and width of the model at full size
 		t.modelWidth = 53
-		t.modelHeight = 30
+		t.modelHeight = 32
 
 		// Sets the minimum height so model won't break
 		t.minHeight = 21
@@ -143,6 +144,15 @@ func (t TitlePage) View() string {
 
 	// Adds the help bar at the bottom
 	fullHelpView := t.help.View(t.keys)
+
+	// Counts empty lines to put help model at bottom of terminal
+	helpHeight := height - strings.Count(s, "\n") - 3
+	if helpHeight < 0 {
+		helpHeight = 0
+	}
+
+	// Add empty lines if there are any to bottom of terminal
+	s += strings.Repeat("\n", helpHeight)
 
 	// Render help bar in correct styling
 	s += styling.HelpBarStyle.Render(fullHelpView)
