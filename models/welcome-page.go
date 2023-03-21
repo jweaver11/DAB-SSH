@@ -3,9 +3,6 @@ users first see when they connect to the SSH server. The model contains the
 title of Digital Art Brokers, a navigation bar between the models, and a help bar
 at the bottom of the page*/
 
-// Tasks - Add DAB logo to end of nav bar
-// get smaller DAB logo for title page
-
 package models
 
 import (
@@ -141,8 +138,10 @@ func (t TitlePage) View() string {
 	// Padding for the watermark to fit in corner of page
 	wMPadding := width - strings.Count(s, "")
 
+	// Adds padding for watermark
 	s += strings.Repeat(" ", wMPadding-2)
 
+	// Addds the watermark
 	s += styling.WaterMarkStyle.Render(t.waterMark) + "\n\n"
 
 	// Adds the navbar and colors the selected page
