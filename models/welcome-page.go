@@ -103,8 +103,41 @@ func (t TitlePage) View() string {
 	// Final string to be rendered through our border at the end
 	var s string
 
+	// Size to return our model later
+	var width, height int
+
+	// Logic for setting terminal width to not break model
+	if t.termWidth <= t.modelWidth {
+		width = t.modelWidth
+	} else {
+		width = t.termWidth
+	}
+
+	t.modelHeight = strings.Count(s, "\n")
+
+	// Logic for setting terminal height to not break model
+	if t.termHeight <= t.minHeight {
+		height = t.minHeight
+	} else {
+		height = t.termHeight
+	}
+
+	// Pirate string for easy return later
+	var pirate string
+
+	// Sets the pirate ship to big or small one based on terminal size
+	if t.termHeight < 29 { // 29 works for me
+		pirate = lilPirate
+	} else {
+		pirate = bigPirate
+	}
+
+	// Adds the help bar at the bottom
+	fullHelpView := t.help.View(t.keys)
+
+	// RENDERING OUR MODEL
 	// Adds the header
-	s += styling.HeaderStyle.Render(t.title) + "\n\n"
+	s += styling.WPHeaderStyle.Render(t.title) + "\n\n"
 
 	// Adds the navbar and colors the selected page
 	for i := range t.navBar {
@@ -115,43 +148,11 @@ func (t TitlePage) View() string {
 		}
 	}
 
-	// Pirate string for easy return later
-	var pirate string
-
-	// Sets the pirate ship to big or small one based on terminal size
-	if t.termHeight < t.modelHeight {
-		pirate = lilPirate
-	} else {
-		pirate = bigPirate
-	}
-
 	// Adds the pirate picture
 	s += styling.PirateStyle.Render(pirate) + "\n"
 
-	// Size to be decided later and returned for model
-	var width, height int
-
-	// Logic for setting terminal width to not break model
-	if t.termWidth <= t.modelWidth {
-		width = t.modelWidth
-	} else {
-		width = t.termWidth
-	}
-
-	// Logic for setting terminal height to not break model
-	if t.termHeight <= t.minHeight {
-		height = t.minHeight
-	} else {
-		height = t.termHeight
-	}
-
-	t.modelHeight = height - strings.Count(s, "\n") - strings.Count("0", "\n")
-
-	// Adds the help bar at the bottom
-	fullHelpView := t.help.View(t.keys)
-
 	// Counts empty lines to put help model at bottom of terminal
-	helpHeight := height - strings.Count(s, "\n") - 3
+	helpHeight := t.termHeight - strings.Count(s, "\n") - 3
 	if helpHeight < 0 {
 		helpHeight = 0
 	}
@@ -162,6 +163,7 @@ func (t TitlePage) View() string {
 	// Render help bar in correct styling
 	s += styling.HelpBarStyle.Render(fullHelpView)
 
+	// Returns model with final styling
 	return styling.BorderStyle.Width(width).Height(height).Render(s)
 }
 
