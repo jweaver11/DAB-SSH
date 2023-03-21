@@ -2,16 +2,13 @@ package styling
 
 import "github.com/charmbracelet/lipgloss"
 
-var HeaderStyle = lipgloss.NewStyle().
+var WPHeaderStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("12"))
 
 var PirateStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("50")).
 	PaddingTop(2).
 	PaddingBottom(2)
-
-var HelpBarStyle = lipgloss.NewStyle().
-	PaddingLeft(2)
 
 var BorderStyle = lipgloss.NewStyle().
 	PaddingLeft(2).
