@@ -6,9 +6,8 @@ var WPHeaderStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("12"))
 
 var PirateStyle = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("50")).
-	PaddingTop(2).
-	PaddingBottom(2)
+	Foreground(lipgloss.Color("50")). // 50
+	PaddingLeft(5)
 
 var BorderStyle = lipgloss.NewStyle().
 	PaddingLeft(2).
