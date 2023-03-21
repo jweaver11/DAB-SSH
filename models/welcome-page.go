@@ -10,16 +10,17 @@ package models
 
 import (
 	"DAB-SSH/styling"
-	"fmt"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 // Our title page as a struct outlining the elements of our title page
 type TitlePage struct {
 	title                   string     // The title
+	waterMark               string     // Watermark in top right corner of page
 	navBar                  []string   // The navigation bar below the title
 	help                    help.Model // The help bar at the bottom of the page
 	keys                    WPkeyMap   // Key map for our help model
@@ -34,17 +35,21 @@ func CreateTitlePage() TitlePage {
 	// Sets the title
 	title := "Digital Art Brokers"
 
+	wM := " DAB "
+
 	// Sets the navbar values
 	navBar := []string{"DAB", "Projects"}
 
 	// Returns our created model
 	return TitlePage{
 		title:       title,
+		waterMark:   wM,
 		navBar:      navBar,
 		help:        help.New(),
 		keys:        keys,
-		modelWidth:  40,
+		modelWidth:  32,
 		modelHeight: 30,
+		minHeight:   15,
 	}
 }
 
@@ -72,9 +77,6 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Sets terminal width and height
 		t.termWidth = msg.Width
 		t.termHeight = msg.Height
-
-		// Sets the minimum height so model won't break
-		t.minHeight = 22
 
 	// Handles all keyboard presses
 	case tea.KeyMsg:
@@ -123,31 +125,32 @@ func (t TitlePage) View() string {
 	var pirate string
 
 	// Sets the pirate ship to big or small one based on terminal size
-	if t.termHeight < t.modelHeight { // 30 works for me
-		pirate = lilPirate
+	if t.termHeight < t.modelHeight {
+		pirate = lilDABLogo
 	} else {
-		pirate = DABLogo
+		pirate = BigDABLogo
 	}
 
 	// Adds the help bar at the bottom
 	fullHelpView := t.help.View(t.keys)
 
-	// Helps with sizing while testing
-	fmt.Printf("Terminal height: %d\n", t.termHeight)
-	fmt.Printf("Terminal width: %d\n", t.termWidth)
-	fmt.Printf("Model height: %d\n", t.modelHeight)
-	fmt.Printf("Model width: %d\n", t.modelWidth)
-
 	// RENDERING OUR MODEL
 	// Adds the header
-	s += styling.WPHeaderStyle.Render(t.title) + "\n\n"
+	s += styling.WPHeaderStyle.Render(t.title)
+
+	// Padding for the watermark to fit in corner of page
+	wMPadding := width - strings.Count(s, "")
+
+	s += strings.Repeat(" ", wMPadding-2)
+
+	s += styling.WaterMarkStyle.Render(t.waterMark) + "\n\n"
 
 	// Adds the navbar and colors the selected page
 	for i := range t.navBar {
 		if i == 0 {
-			s += styling.NavBarStyle.Faint(false).Render("• "+t.navBar[i]) + "	"
+			s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render("• "+t.navBar[i]) + "	"
 		} else {
-			s += styling.NavBarStyle.UnsetForeground().Faint(true).Render("  "+t.navBar[i]) + "		\n"
+			s += styling.NavBarStyle.UnsetForeground().Render("  "+t.navBar[i]) + "		\n"
 		}
 	}
 
@@ -171,7 +174,7 @@ func (t TitlePage) View() string {
 }
 
 // DAB logo using braille art thx to Braille ASCII Art generator
-var DABLogo string = `
+var BigDABLogo string = `
 ⠀⠀⠀⠀⠀⠀⠀⢀⢀⣠⠤⡄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⢀⣀⣀⣔⣨⠉⠂⠀⠂⠁⠀⠱⣒⣠⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⡀⠀⠀
 ⠀⠀⢺⠱⣅⢊⢸⡀⢠⠀⢐⠀⡇⢀⡇⢕⢈⠢⡑⣈⠢⡑⣈⠢⡑⡨⠎⡇⠀⠀
@@ -196,15 +199,15 @@ var DABLogo string = `
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠈⠈⠀⠀⠀⠀⠀⠀⠀⠀`
 
 // Small Pirate image (formatting messed up on github)
-var lilPirate string = `
-
-				#
-				###
-				#####
-				###
-				#
-				#
-				#
-		#################
-		  #############
-			#########`
+var lilDABLogo string = `
+⠀⠀⢀⣀⠄⠔⠐⠠⣀⡀⣀⢀⢀⡀⡀⠀
+⠀⢇⠆⢣⠐⡀⠃⡇⠒⡐⢘⠐⢰⢑⠀
+⠀⡃⡇⢊⠡⠢⠅⠅⠍⠌⠌⡑⠨⡢⠀
+⠀⡣⡑⡐⡀⠀⠀⠀⠀⠀⢀⢊⠨⡢⠀
+⠀⡣⡑⡐⡀⠀⢀⣀⡀⠀⢀⠢⢘⠔⠀
+⠀⡣⡑⡐⡀⠀⢹⣿⡧⠀⠐⡨⢐⠕⠀
+⠀⡕⡅⠢⠀⠀⠀⠀⠀⠀⢀⠢⢘⢌⠀
+⠀⢎⠢⡡⠁⠀⠀⠀⠀⠀⠀⡌⢔⠢⠀
+⠀⢇⡃⠢⠨⠡⠩⠨⢡⠩⡐⢔⠰⡑⠀
+⠀⣇⣚⣒⣓⣒⣓⣒⠆⠀⠃⢨⣪⡬⠀
+⠀⠀⠀⠀⠀⠀⠀⠈⠑⠒⠠⠊⠀⠀⠀`
