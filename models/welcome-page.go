@@ -3,17 +3,18 @@ users first see when they connect to the SSH server. The model contains the
 title of Digital Art Brokers, a navigation bar between the models, and a help bar
 at the bottom of the page*/
 
-package models
+// Tasks - Add DAB logo to end of nav bar
+// get smaller DAB logo for title page
 
-// Make description comment at top of each file
+package models
 
 import (
 	"DAB-SSH/styling"
+	"fmt"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 )
 
 // Our title page as a struct outlining the elements of our title page
@@ -38,10 +39,12 @@ func CreateTitlePage() TitlePage {
 
 	// Returns our created model
 	return TitlePage{
-		title:  title,
-		navBar: navBar,
-		help:   help.New(),
-		keys:   keys,
+		title:       title,
+		navBar:      navBar,
+		help:        help.New(),
+		keys:        keys,
+		modelWidth:  40,
+		modelHeight: 30,
 	}
 }
 
@@ -70,12 +73,8 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		t.termWidth = msg.Width
 		t.termHeight = msg.Height
 
-		// Height and width of the model at full size
-		t.modelWidth = 53
-		//t.modelHeight = 32
-
 		// Sets the minimum height so model won't break
-		t.minHeight = 21
+		t.minHeight = 22
 
 	// Handles all keyboard presses
 	case tea.KeyMsg:
@@ -113,8 +112,6 @@ func (t TitlePage) View() string {
 		width = t.termWidth
 	}
 
-	t.modelHeight = strings.Count(s, "\n")
-
 	// Logic for setting terminal height to not break model
 	if t.termHeight <= t.minHeight {
 		height = t.minHeight
@@ -126,14 +123,20 @@ func (t TitlePage) View() string {
 	var pirate string
 
 	// Sets the pirate ship to big or small one based on terminal size
-	if t.termHeight < 29 { // 29 works for me
+	if t.termHeight < t.modelHeight { // 30 works for me
 		pirate = lilPirate
 	} else {
-		pirate = bigPirate
+		pirate = DABLogo
 	}
 
 	// Adds the help bar at the bottom
 	fullHelpView := t.help.View(t.keys)
+
+	// Helps with sizing while testing
+	fmt.Printf("Terminal height: %d\n", t.termHeight)
+	fmt.Printf("Terminal width: %d\n", t.termWidth)
+	fmt.Printf("Model height: %d\n", t.modelHeight)
+	fmt.Printf("Model width: %d\n", t.modelWidth)
 
 	// RENDERING OUR MODEL
 	// Adds the header
@@ -142,14 +145,14 @@ func (t TitlePage) View() string {
 	// Adds the navbar and colors the selected page
 	for i := range t.navBar {
 		if i == 0 {
-			s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render("• "+t.navBar[i]) + "	"
+			s += styling.NavBarStyle.Faint(false).Render("• "+t.navBar[i]) + "	"
 		} else {
-			s += styling.NavBarStyle.UnsetForeground().Render("  "+t.navBar[i]) + "		\n"
+			s += styling.NavBarStyle.UnsetForeground().Faint(true).Render("  "+t.navBar[i]) + "		\n"
 		}
 	}
 
 	// Adds the pirate picture
-	s += styling.PirateStyle.Render(pirate) + "\n"
+	s += styling.PirateStyle.Render(pirate) + "\n\n"
 
 	// Counts empty lines to put help model at bottom of terminal
 	helpHeight := t.termHeight - strings.Count(s, "\n") - 3
@@ -167,29 +170,34 @@ func (t TitlePage) View() string {
 	return styling.BorderStyle.Width(width).Height(height).Render(s)
 }
 
-// Pirate image
-var bigPirate string = `
-				##
-				#####
-				########
-				###########
-				########
-				#####
-				##
-				#
-				#
-				#
-				#
-				#
-##################################
- ###############################
-   ###########################
-	 #######################
-	   ###################
-		 ###############`
+// DAB logo using braille art thx to Braille ASCII Art generator
+var DABLogo string = `
+⠀⠀⠀⠀⠀⠀⠀⢀⢀⣠⠤⡄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢀⣀⣀⣔⣨⠉⠂⠀⠂⠁⠀⠱⣒⣠⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⡀⠀⠀
+⠀⠀⢺⠱⣅⢊⢸⡀⢠⠀⢐⠀⡇⢀⡇⢕⢈⠢⡑⣈⠢⡑⣈⠢⡑⡨⠎⡇⠀⠀
+⠀⠀⣹⢐⢼⠈⠠⢱⠐⠅⢸⠀⢨⠀⡇⢁⠁⡁⠡⠀⠅⡈⠄⠡⠈⡇⠅⡇⠀⠀
+⠀⠀⢼⠐⢼⠀⢸⡁⠉⠣⠼⣀⡘⠒⠉⠉⠉⠉⠉⠉⠉⠈⠩⡆⠂⡥⠡⡇⠀⠀
+⠀⠀⢺⠨⢺⠀⢸⠄⠐⡖⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⢺⠀⢘⠆⠀⡇⠌⡇⠀⠀
+⠀⠀⣹⠨⢺⠈⢸⠀⠄⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢨⡃⠀⡇⠅⡇⠀⠀
+⠀⠀⢼⢈⢺⠀⢸⠂⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠰⡅⠀⡇⠅⡇⠀⠀
+⠀⠀⣺⢐⢹⠀⢸⠂⠁⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢘⠆⠁⡥⠑⡇⠀⠀
+⠀⠀⢼⢐⢹⢀⢸⠂⢀⡇⠀⠀⠀⣄⣄⣤⣠⡀⠀⠀⢸⠀⢨⡃⠀⡇⠅⡇⠀⠀
+⠀⠀⣹⠠⣹⠀⢸⠠⠀⡇⠀⠀⠐⣿⣿⣿⣿⡅⠀⠀⢸⠀⠰⡅⠂⡕⠡⡇⠀⠀
+⠀⠀⢺⠨⣸⠀⢸⠂⠀⡇⠀⠀⠈⡿⡿⡿⡿⠆⠀⠀⢸⠀⢘⠆⠀⡇⠅⡇⠀⠀
+⠀⠀⢽⢐⢼⠀⢸⠂⠁⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢨⡃⠄⡣⠡⡇⠀⠀
+⠀⠀⣺⠐⢼⠐⢘⡂⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠰⡅⠀⡇⠅⡇⠀⠀
+⠀⠀⢼⠨⢺⠀⢸⠠⠐⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢘⠆⡀⢇⠅⡇⠀⠀
+⠀⠀⣹⢈⢺⢀⢸⠂⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢨⡃⠀⡇⠌⡇⠀⠀
+⠀⠀⢺⢐⢹⠀⢸⠀⠁⡉⠌⠊⠈⠊⠈⠊⠘⠈⠡⠉⢊⣠⢐⠅⠄⡣⠡⡇⠀⠀
+⠀⠀⢽⢐⢹⠀⡘⢑⠒⢂⠒⠒⠒⡑⠒⡑⠒⢪⢲⠉⡣⠀⠕⢳⡀⢇⠅⡇⠀⠀
+⠀⠀⢺⠠⣹⢤⢤⢤⡢⣄⣆⢥⣰⣠⡢⡤⣬⡂⢸⠀⡊⠀⠄⢸⣤⡣⡈⡇⠀⠀
+⠀⠀⣹⣮⣅⣆⣥⣢⣬⣰⣠⣅⣆⣔⣤⣱⡸⠀⠘⠀⠂⠀⠃⢸⣢⣸⣢⡇⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠒⠥⣠⡄⡠⢀⡀⡠⠎⠒⠁⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠈⠈⠀⠀⠀⠀⠀⠀⠀⠀`
 
-// Small Pirate image
+// Small Pirate image (formatting messed up on github)
 var lilPirate string = `
+
 				#
 				###
 				#####
