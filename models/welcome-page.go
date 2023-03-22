@@ -21,7 +21,7 @@ type TitlePage struct {
 	keys                    WPkeyMap   // Key map for our help model
 	termWidth, termHeight   int        // Size of the terminal
 	modelWidth, modelHeight int        // Size of the model
-	minHeight               int        // Minimum size without model breaking
+	minWidth, minHeight     int        // Minimum size without model breaking
 }
 
 // Creates our title page gives it values
@@ -31,12 +31,12 @@ func CreateTitlePage() TitlePage {
 	title := "Digital Art Brokers"
 
 	// Sets the watermark
-	wM := " DAB "
+	WM := " DAB "
 
 	// Returns our created model
 	return TitlePage{
 		title:       title,
-		waterMark:   wM,
+		waterMark:   WM,
 		help:        help.New(),
 		keys:        keys,
 		modelWidth:  32,
@@ -135,10 +135,10 @@ func (t TitlePage) View() string {
 	s += styling.WPHeaderStyle.Render(t.title)
 
 	// Padding for the watermark to fit in corner of page
-	wMPadding := width - strings.Count(s, "")
+	WMPadding := width - strings.Count(s, "")
 
 	// Adds padding for watermark
-	s += strings.Repeat(" ", wMPadding-2)
+	s += strings.Repeat(" ", WMPadding-2)
 
 	// Addds the watermark
 	s += styling.WaterMarkStyle.Render(t.waterMark) + "\n\n"
