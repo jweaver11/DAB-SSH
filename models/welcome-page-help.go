@@ -26,7 +26,7 @@ func (k WPkeyMap) FullHelp() [][]key.Binding {
 }
 
 // Sets keys as our object using our keyMap struct from above
-var keys = WPkeyMap{
+var WPkeys = WPkeyMap{
 	Advance: key.NewBinding(
 		key.WithKeys(""),
 		key.WithHelp("Press any key", "to continue"),

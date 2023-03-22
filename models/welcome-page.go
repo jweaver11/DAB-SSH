@@ -37,8 +37,8 @@ func CreateTitlePage() TitlePage {
 	return TitlePage{
 		title:       title,
 		waterMark:   WM,
-		help:        help.New(),
-		keys:        keys,
+		help:        help.New(), // Creates a new help model
+		keys:        WPkeys,     // Sets our keymap to the welcome page keymap
 		modelWidth:  32,
 		modelHeight: 29,
 		minHeight:   14,
