@@ -7,18 +7,17 @@ package models
 
 import (
 	"DAB-SSH/styling"
+	"fmt"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 )
 
 // Our title page as a struct outlining the elements of our title page
 type TitlePage struct {
 	title                   string     // The title
 	waterMark               string     // Watermark in top right corner of page
-	navBar                  []string   // The navigation bar below the title
 	help                    help.Model // The help bar at the bottom of the page
 	keys                    WPkeyMap   // Key map for our help model
 	termWidth, termHeight   int        // Size of the terminal
@@ -32,21 +31,18 @@ func CreateTitlePage() TitlePage {
 	// Sets the title
 	title := "Digital Art Brokers"
 
+	// Sets the watermark
 	wM := " DAB "
-
-	// Sets the navbar values
-	navBar := []string{"DAB", "Projects"}
 
 	// Returns our created model
 	return TitlePage{
 		title:       title,
 		waterMark:   wM,
-		navBar:      navBar,
 		help:        help.New(),
 		keys:        keys,
 		modelWidth:  32,
-		modelHeight: 30,
-		minHeight:   15,
+		modelHeight: 29,
+		minHeight:   14,
 	}
 }
 
@@ -82,12 +78,16 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 
 		// When q pressed, quit
-		case "q":
+		case "q", "esc", "ctrl+c":
 			return t, tea.Quit
 
 		// When ? pressed, switch between short help view and full help view
 		case "?":
 			t.help.ShowAll = !t.help.ShowAll
+
+		// If key pressed and not one above, move to next page
+		default:
+			fmt.Println("works")
 		}
 	}
 
@@ -143,15 +143,6 @@ func (t TitlePage) View() string {
 
 	// Addds the watermark
 	s += styling.WaterMarkStyle.Render(t.waterMark) + "\n\n"
-
-	// Adds the navbar and colors the selected page
-	for i := range t.navBar {
-		if i == 0 {
-			s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render("• "+t.navBar[i]) + "	"
-		} else {
-			s += styling.NavBarStyle.UnsetForeground().Render("  "+t.navBar[i]) + "		\n"
-		}
-	}
 
 	// Adds the pirate picture
 	s += styling.PirateStyle.Render(pirate) + "\n\n"
