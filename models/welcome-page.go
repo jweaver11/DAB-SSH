@@ -7,7 +7,6 @@ package models
 
 import (
 	"DAB-SSH/styling"
-	"fmt"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
@@ -87,7 +86,7 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// If key pressed and not one above, move to next page
 		default:
-			fmt.Println("works")
+			return CreateProjectPage(), cmd
 		}
 	}
 
