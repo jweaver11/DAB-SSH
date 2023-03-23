@@ -2,6 +2,7 @@ package models
 
 import (
 	"DAB-SSH/styling"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
@@ -12,7 +13,7 @@ type ProjectPage struct {
 	waterMark               string     // Watermark in top right corner of page
 	navBar                  []string   // Nav bar below the title
 	cursor                  int        // Used to track our cursor
-	projects                []string   // An array of strings our our projects
+	projects, descriptions  []string   // An array of strings of our projects and descriptions
 	help                    help.Model // The help bar at the bottom of the page
 	keys                    WPkeyMap   // Key map for our help model
 	termWidth, termHeight   int        // Size of the terminal
@@ -26,24 +27,29 @@ func CreateProjectPage() ProjectPage {
 	WM := " DAB "
 
 	// Sets the navbar values
-	NB := []string{"Projects", "OtherThing", "AnotherThing", "MoreThing"}
+	NB := []string{"Projects", "About", "OtherThing", "AnotherThing", "MoreThing"}
 
 	// Sets the cursor to 0
 	cursor := 0
 
 	projects := []string{"Project 1", "Project 2", "Project 3", "Project 4"}
 
+	descriptions := []string{"Dank pirates n shit", "Dank SSH app ur using rn bozo", "Project 3 descripiton", "Project 4 Descripiotn"}
+
 	return ProjectPage{
-		waterMark:   WM,
-		navBar:      NB,
-		cursor:      cursor,
-		projects:    projects,
-		help:        help.New(),
-		keys:        PPkeys, // Sets our keymap to the project page keys
-		modelWidth:  32,     // Change to actual model width
-		modelHeight: 29,     // Change to actual model height
-		minWidth:    32,
-		minHeight:   14, // Might not work for this
+		waterMark:    WM,
+		navBar:       NB,
+		cursor:       cursor,
+		projects:     projects,
+		descriptions: descriptions,
+		help:         help.New(),
+		keys:         PPkeys, // Sets our keymap to the project page keys
+		termWidth:    80,
+		termHeight:   14,
+		modelWidth:   80, // Change to actual model width
+		modelHeight:  29, // Change to actual model height
+		minWidth:     36,
+		minHeight:    14, // Might not work for this
 	}
 }
 
@@ -124,36 +130,55 @@ func (p ProjectPage) View() string {
 		height = p.termHeight
 	}
 
-	// RENDERING OUR MODEL *********************
+	// Adds the help bar at the bottom
+	fullHelpView := p.help.View(p.keys)
 
+	// RENDERING OUR MODEL *********************
 	// Addds the watermark
 	s += styling.WaterMarkStyle.Render(p.waterMark) + "\n\n"
 
-	// Adds the navbar and colors the selected page
+	// Adds the navbar and highlights the selected page
 	for i := range p.navBar {
-
 		if i == 0 {
 			s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render(p.navBar[i]) + "		"
 		} else {
 			s += styling.NavBarStyle.UnsetForeground().UnsetFaint().Render(p.navBar[i]) + "		"
 		}
-
 	}
 
-	s += "\n\n"
+	s += "\n\n\n"
 
+	// Adds our listed projects and short descriptions
 	for i := range p.projects {
 
-		cursor := "  "
-		styling.SelectedProjectStyle.UnsetForeground()
+		// Reset formatting
+		styling.SelectedProjectStyle.UnsetFaint()
 
+		// Sets cursor to blank if not selected
+		cursor := "  "
+
+		// Sets our cursor to dot if selected
 		if p.cursor == i {
 			cursor = "• "
 			styling.SelectedProjectStyle.Foreground(lipgloss.Color("#7D56F4"))
 		}
 
-		s += styling.SelectedProjectStyle.Render(cursor+p.projects[i]) + "\n\n"
+		// Adds the project and description
+		s += styling.SelectedProjectStyle.Render(cursor+p.projects[i]) + "\n"
+		s += styling.SelectedProjectStyle.UnsetForeground().Faint(true).Render("   "+p.descriptions[i]) + "\n\n"
 	}
+
+	// Counts empty lines to put help model at bottom of terminal
+	helpHeight := p.termHeight - strings.Count(s, "\n") - 3
+	if helpHeight < 0 {
+		helpHeight = 0
+	}
+
+	// Add empty lines if there are any to bottom of terminal
+	s += strings.Repeat("\n", helpHeight)
+
+	// Render help bar in correct styling
+	s += styling.HelpBarStyle.Render(fullHelpView)
 
 	// Returns model with final styling
 	return styling.BorderStyle.Width(width).Height(height).Render(s)
