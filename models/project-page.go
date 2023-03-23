@@ -2,42 +2,42 @@ package models
 
 import (
 	"DAB-SSH/styling"
-	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
-	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
 
 type ProjectPage struct {
-	title                   string        // The title
-	waterMark               string        // Watermark in top right corner of page
-	navBar                  []string      // Nav bar below the title
-	cursor                  int           // Used to track our cursor
-	spinner                 spinner.Model // Spinner used as our cursor
-	help                    help.Model    // The help bar at the bottom of the page
-	keys                    WPkeyMap      // Key map for our help model
-	termWidth, termHeight   int           // Size of the terminal
-	modelWidth, modelHeight int           // Size of the model
-	minWidth, minHeight     int           // Minimum size without model breaking
+	waterMark               string     // Watermark in top right corner of page
+	navBar                  []string   // Nav bar below the title
+	cursor                  int        // Used to track our cursor
+	projects                []string   // An array of strings our our projects
+	help                    help.Model // The help bar at the bottom of the page
+	keys                    WPkeyMap   // Key map for our help model
+	termWidth, termHeight   int        // Size of the terminal
+	modelWidth, modelHeight int        // Size of the model
+	minWidth, minHeight     int        // Minimum size without model breaking
 }
 
 func CreateProjectPage() ProjectPage {
-
-	// Sets the title
-	title := "Digital Art Brokers"
 
 	// Sets the watermark
 	WM := " DAB "
 
 	// Sets the navbar values
-	NB := []string{"Projects", "-", "Descriptions"}
+	NB := []string{"Projects", "OtherThing", "AnotherThing", "MoreThing"}
+
+	// Sets the cursor to 0
+	cursor := 0
+
+	projects := []string{"Project 1", "Project 2", "Project 3", "Project 4"}
 
 	return ProjectPage{
-		title:       title,
 		waterMark:   WM,
 		navBar:      NB,
+		cursor:      cursor,
+		projects:    projects,
 		help:        help.New(),
 		keys:        PPkeys, // Sets our keymap to the project page keys
 		modelWidth:  32,     // Change to actual model width
@@ -76,13 +76,25 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Converts the press into a string
 		switch msg.String() {
 
-		// When q pressed, quit
+		// Quits program
 		case "q":
 			return p, tea.Quit
 
-		// When ? pressed, switch between short help view and full help view
+		// Switches between full help view
 		case "?":
 			p.help.ShowAll = !p.help.ShowAll
+
+		// Move cursor up
+		case "up", "w":
+			if p.cursor > 0 {
+				p.cursor--
+			}
+
+		// Move cursor down
+		case "down", "s":
+			if p.cursor < len(p.projects)-1 {
+				p.cursor++
+			}
 		}
 
 	}
@@ -113,34 +125,35 @@ func (p ProjectPage) View() string {
 	}
 
 	// RENDERING OUR MODEL *********************
-	// Adds the header
-	s += styling.WPHeaderStyle.Render(p.title)
 
-	// Padding for the watermark to fit in corner of page
-	WMPadding := width - strings.Count(s, "")
-	// Adds padding for watermark
-	s += strings.Repeat(" ", WMPadding-2)
 	// Addds the watermark
 	s += styling.WaterMarkStyle.Render(p.waterMark) + "\n\n"
 
 	// Adds the navbar and colors the selected page
 	for i := range p.navBar {
-		if i <= 2 {
-			if i == 0 {
-				s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render("• " + p.navBar[i])
-			} else if i == 1 {
-				s += lipgloss.NewStyle().UnsetForeground().Faint(true).Render(p.navBar[i])
-			} else if i == 2 {
-				s += styling.NavBarStyle.UnsetForeground().Render(p.navBar[i])
-			}
+
+		if i == 0 {
+			s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render(p.navBar[i]) + "		"
 		} else {
-			s += styling.NavBarStyle.UnsetForeground().UnsetFaint().Render(p.navBar[i])
+			s += styling.NavBarStyle.UnsetForeground().UnsetFaint().Render(p.navBar[i]) + "		"
 		}
+
 	}
 
-	s += "\n"
+	s += "\n\n"
 
-	s += "Projects go here"
+	for i := range p.projects {
+
+		cursor := "  "
+		styling.SelectedProjectStyle.UnsetForeground()
+
+		if p.cursor == i {
+			cursor = "• "
+			styling.SelectedProjectStyle.Foreground(lipgloss.Color("#7D56F4"))
+		}
+
+		s += styling.SelectedProjectStyle.Render(cursor+p.projects[i]) + "\n\n"
+	}
 
 	// Returns model with final styling
 	return styling.BorderStyle.Width(width).Height(height).Render(s)
