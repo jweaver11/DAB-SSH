@@ -20,7 +20,7 @@ type ProjectPage struct {
 	cursor                  int        // Used to track our cursor
 	projects, descriptions  []string   // An array of strings of our projects and descriptions
 	help                    help.Model // The help bar at the bottom of the page
-	keys                    WPkeyMap   // Key map for our help model
+	keys                    PPkeyMap   // Key map for our help model
 	termWidth, termHeight   int        // Size of the terminal
 	modelWidth, modelHeight int        // Size of the model
 	minWidth, minHeight     int        // Minimum size without model breaking
@@ -56,7 +56,7 @@ func CreateProjectPage() ProjectPage {
 		keys:         PPkeys, // Sets our keymap to the project page keys
 		termWidth:    36,     // Set when model creation since it ...
 		termHeight:   14,     // won't update until model is resized
-		modelWidth:   50,     // Change to actual model width
+		modelWidth:   70,     // Change to actual model width
 		modelHeight:  29,     // Change to actual model height
 		minWidth:     36,     // Minimum width
 		minHeight:    14,     // Might not work for this
@@ -112,10 +112,15 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if p.cursor < len(p.projects)-1 {
 				p.cursor++
 			}
+
+		// Move to next page
+		case "tab":
+			return p, cmd
 		}
 
 	}
 
+	// Return the model and cmd
 	return p, cmd
 }
 
