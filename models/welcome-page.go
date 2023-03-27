@@ -15,13 +15,13 @@ import (
 
 // Our title page as a struct outlining the elements of our title page
 type TitlePage struct {
-	title                   string     // The title
-	waterMark               string     // Watermark in top right corner of page
-	help                    help.Model // The help bar at the bottom of the page
-	keys                    WPkeyMap   // Key map for our help model
-	termWidth, termHeight   int        // Size of the terminal
-	modelWidth, modelHeight int        // Size of the model
-	minWidth, minHeight     int        // Minimum size without model breaking
+	title                            string     // The title
+	waterMark                        string     // Watermark in top right corner of page
+	help                             help.Model // The help bar at the bottom of the page
+	keys                             WPkeyMap   // Key map for our help model
+	termWidth, termHeight            int        // Size of the terminal
+	modelWidth                       int        // Size of the model
+	bigModelHeight, smallModelHeight int
 }
 
 // Creates our title page gives it values
@@ -35,13 +35,13 @@ func CreateTitlePage() TitlePage {
 
 	// Returns our created model
 	return TitlePage{
-		title:       title,
-		waterMark:   WM,
-		help:        help.New(), // Creates a new help model
-		keys:        WPkeys,     // Sets our keymap to the welcome page keymap
-		modelWidth:  32,
-		modelHeight: 29,
-		minHeight:   14,
+		title:            title,
+		waterMark:        WM,
+		help:             help.New(), // Creates a new help model
+		keys:             WPkeys,     // Sets our keymap to the welcome page keymap
+		modelWidth:       32,
+		bigModelHeight:   29,
+		smallModelHeight: 14,
 	}
 }
 
@@ -80,10 +80,6 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "esc", "ctrl+c":
 			return t, tea.Quit
 
-		// When ? pressed, switch between short help view and full help view
-		case "?":
-			t.help.ShowAll = !t.help.ShowAll
-
 		// If key pressed and not one above, move to next page
 		default:
 			return CreateProjectPage(), cmd
@@ -111,20 +107,20 @@ func (t TitlePage) View() string {
 	}
 
 	// Logic for setting terminal height to not break model
-	if t.termHeight <= t.minHeight {
-		height = t.minHeight
+	if t.termHeight <= t.smallModelHeight {
+		height = t.smallModelHeight
 	} else {
 		height = t.termHeight
 	}
 
 	// Pirate string for easy return later
-	var pirate string
+	var logo string
 
 	// Sets the pirate ship to big or small one based on terminal size
-	if t.termHeight < t.modelHeight {
-		pirate = lilDABLogo
+	if t.termHeight < t.bigModelHeight {
+		logo = lilDABLogo
 	} else {
-		pirate = BigDABLogo
+		logo = BigDABLogo
 	}
 
 	// Adds the help bar at the bottom
@@ -144,7 +140,7 @@ func (t TitlePage) View() string {
 	s += styling.WaterMarkStyle.Render(t.waterMark) + "\n\n"
 
 	// Adds the pirate picture
-	s += styling.PirateStyle.Render(pirate) + "\n\n"
+	s += styling.PirateStyle.Render(logo) + "\n\n"
 
 	// Counts empty lines to put help model at bottom of terminal
 	helpHeight := t.termHeight - strings.Count(s, "\n") - 3

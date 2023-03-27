@@ -25,7 +25,8 @@ func (k WPkeyMap) ShortHelp() []key.Binding {
 // It is part of the key.Map interface
 func (k WPkeyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.Advance, k.Quit},
+		{k.Advance},
+		{k.Quit},
 	}
 }
 
