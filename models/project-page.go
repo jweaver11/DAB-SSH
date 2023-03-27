@@ -22,8 +22,7 @@ type ProjectPage struct {
 	help                    help.Model // The help bar at the bottom of the page
 	keys                    PPkeyMap   // Key map for our help model
 	termWidth, termHeight   int        // Size of the terminal
-	modelWidth, modelHeight int        // Size of the model
-	minWidth, minHeight     int        // Minimum size without model breaking
+	modelWidth, modelHeight int        // Size of the model (not including help model)
 }
 
 func CreateProjectPage() ProjectPage {
@@ -55,9 +54,7 @@ func CreateProjectPage() ProjectPage {
 		help:         help.New(),
 		keys:         PPkeys, // Sets our keymap to the project page keys
 		modelWidth:   66,     // Change to actual model width
-		modelHeight:  29,     // Change to actual model height
-		minWidth:     50,     // Minimum width
-		minHeight:    12,     // Might not work for this
+		modelHeight:  12,     // Change to actual model height
 	}
 }
 
@@ -97,7 +94,7 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Switches between full help view
 		case "?":
-			if p.termHeight-p.minHeight > 4 {
+			if p.termHeight-p.modelHeight > 4 {
 				p.help.ShowAll = !p.help.ShowAll
 			}
 
@@ -140,8 +137,8 @@ func (p ProjectPage) View() string {
 	}
 
 	// Logic for setting terminal height to not break model
-	if p.termHeight <= p.minHeight {
-		height = p.minHeight
+	if p.termHeight <= p.modelHeight {
+		height = p.modelHeight
 	} else {
 		height = p.termHeight
 	}
@@ -190,7 +187,7 @@ func (p ProjectPage) View() string {
 		helpHeight = 0
 	}
 
-	// Makes room for full help room
+	// Makes room for full help view
 	if helpHeight > 3 && p.help.ShowAll == true {
 		helpHeight -= 3
 	}
