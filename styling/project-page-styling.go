@@ -1,3 +1,4 @@
+/* Styling for the project page only */
 package styling
 
 import "github.com/charmbracelet/lipgloss"

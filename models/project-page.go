@@ -1,3 +1,8 @@
+/* Controls the project page model, which is the page that
+shows users the projects DAB is working on. The model contains the watermark
+and navbar, a cursor to point at the projects, the projects and short description
+of them, and a help model at bottom of page */
+
 package models
 
 import (
@@ -32,10 +37,19 @@ func CreateProjectPage() ProjectPage {
 	// Sets the cursor to 0
 	cursor := 0
 
-	projects := []string{"Project 1", "Project 2", "Project 3", "Project 4"}
+	// Sets our projects
+	projects := []string{"Project 1",
+		"Project 2",
+		"Project 3",
+		"Project 4"}
 
-	descriptions := []string{"Dank pirates n shit", "Dank SSH app ur using rn bozo", "Project 3 descripiton", "Project 4 Descripiotn"}
+	// Sets the short descriptions
+	descriptions := []string{"Dank pirates n shit",
+		"Dank SSH app ur using rn bozo",
+		"Project 3 descripiton",
+		"Project 4 Descripiotn"}
 
+	// Returns our newly created model
 	return ProjectPage{
 		waterMark:    WM,
 		navBar:       NB,
@@ -77,6 +91,7 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		p.termWidth = msg.Width
 		p.termHeight = msg.Height
 
+	// All key presses
 	case tea.KeyMsg:
 
 		// Converts the press into a string

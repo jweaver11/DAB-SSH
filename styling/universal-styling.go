@@ -1,3 +1,5 @@
+/* Styling for elements that appear in multiple pages */
+
 package styling
 
 import "github.com/charmbracelet/lipgloss"

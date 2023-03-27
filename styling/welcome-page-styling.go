@@ -1,3 +1,5 @@
+/* Styling for the welcome page only */
+
 package styling
 
 import "github.com/charmbracelet/lipgloss"

@@ -1,3 +1,7 @@
+/* The help model for the Welcome Page
+Declares the keymap struct and all the keys used for
+just the project page */
+
 package models
 
 import (

@@ -1,4 +1,4 @@
-/* This file controls the welcome page model, which is the page that
+/* Controls the welcome page model, which is the page that
 users first see when they connect to the SSH server. The model contains the
 title of Digital Art Brokers, a navigation bar between the models, and a help bar
 at the bottom of the page*/
