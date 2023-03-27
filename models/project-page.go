@@ -54,12 +54,10 @@ func CreateProjectPage() ProjectPage {
 		descriptions: descriptions,
 		help:         help.New(),
 		keys:         PPkeys, // Sets our keymap to the project page keys
-		termWidth:    36,     // Set when model creation since it ...
-		termHeight:   14,     // won't update until model is resized
-		modelWidth:   70,     // Change to actual model width
+		modelWidth:   66,     // Change to actual model width
 		modelHeight:  29,     // Change to actual model height
-		minWidth:     36,     // Minimum width
-		minHeight:    14,     // Might not work for this
+		minWidth:     50,     // Minimum width
+		minHeight:    12,     // Might not work for this
 	}
 }
 
@@ -99,7 +97,9 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Switches between full help view
 		case "?":
-			p.help.ShowAll = !p.help.ShowAll
+			if p.termHeight-p.minHeight > 4 {
+				p.help.ShowAll = !p.help.ShowAll
+			}
 
 		// Move cursor up
 		case "up", "w":
@@ -185,9 +185,14 @@ func (p ProjectPage) View() string {
 	}
 
 	// Counts empty lines to put help model at bottom of terminal
-	helpHeight := p.termHeight - strings.Count(s, "\n") - 3
+	helpHeight := p.termHeight - strings.Count(s, "\n") - 2
 	if helpHeight < 0 {
 		helpHeight = 0
+	}
+
+	// Makes room for full help room
+	if helpHeight > 3 && p.help.ShowAll == true {
+		helpHeight -= 3
 	}
 
 	// Add empty lines if there are any to bottom of terminal
