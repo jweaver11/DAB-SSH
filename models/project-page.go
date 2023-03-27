@@ -32,22 +32,18 @@ func CreateProjectPage() ProjectPage {
 	WM := " DAB "
 
 	// Sets the navbar values
-	NB := []string{"Projects", "About", "OtherThing", "AnotherThing", "MoreThing"}
+	NB := []string{"Projects", "About"}
 
 	// Sets the cursor to 0
 	cursor := 0
 
 	// Sets our projects
-	projects := []string{"Project 1",
-		"Project 2",
-		"Project 3",
-		"Project 4"}
+	projects := []string{"Buccaneers of the Blockchain",
+		"SSH App"}
 
 	// Sets the short descriptions
-	descriptions := []string{"Dank pirates n shit",
-		"Dank SSH app ur using rn bozo",
-		"Project 3 descripiton",
-		"Project 4 Descripiotn"}
+	descriptions := []string{"NFT buccaneers that look pretty darn cool",
+		"The SSH app you are currently using right now"}
 
 	// Returns our newly created model
 	return ProjectPage{
@@ -58,12 +54,12 @@ func CreateProjectPage() ProjectPage {
 		descriptions: descriptions,
 		help:         help.New(),
 		keys:         PPkeys, // Sets our keymap to the project page keys
-		termWidth:    80,
-		termHeight:   14,
-		modelWidth:   80, // Change to actual model width
-		modelHeight:  29, // Change to actual model height
-		minWidth:     36,
-		minHeight:    14, // Might not work for this
+		termWidth:    36,     // Set when model creation since it ...
+		termHeight:   14,     // won't update until model is resized
+		modelWidth:   50,     // Change to actual model width
+		modelHeight:  29,     // Change to actual model height
+		minWidth:     36,     // Minimum width
+		minHeight:    14,     // Might not work for this
 	}
 }
 
