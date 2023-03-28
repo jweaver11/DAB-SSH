@@ -6,6 +6,7 @@ at the bottom of the page*/
 package models
 
 import (
+	"DAB-SSH/helpers"
 	"DAB-SSH/styling"
 	"strings"
 
@@ -15,12 +16,12 @@ import (
 
 // Our title page as a struct outlining the elements of our title page
 type TitlePage struct {
-	title                            string     // The title
-	waterMark                        string     // Watermark in top right corner of page
-	help                             help.Model // The help bar at the bottom of the page
-	keys                             WPkeyMap   // Key map for our help model
-	termWidth, termHeight            int        // Size of the terminal
-	modelWidth                       int        // Size of the model
+	title                            string           // The title
+	waterMark                        string           // Watermark in top right corner of page
+	help                             help.Model       // The help bar at the bottom of the page
+	keys                             helpers.WPkeyMap // Key map for our help model
+	termWidth, termHeight            int              // Size of the terminal
+	modelWidth                       int              // Size of the model
 	bigModelHeight, smallModelHeight int
 }
 
@@ -37,8 +38,8 @@ func CreateTitlePage() TitlePage {
 	return TitlePage{
 		title:            title,
 		waterMark:        WM,
-		help:             help.New(), // Creates a new help model
-		keys:             WPkeys,     // Sets our keymap to the welcome page keymap
+		help:             help.New(),     // Creates a new help model
+		keys:             helpers.WPkeys, // Sets our keymap to the welcome page keymap
 		modelWidth:       32,
 		bigModelHeight:   29,
 		smallModelHeight: 14,

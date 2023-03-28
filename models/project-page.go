@@ -6,7 +6,9 @@ of them, and a help model at bottom of page */
 package models
 
 import (
+	"DAB-SSH/helpers"
 	"DAB-SSH/styling"
+	"os/exec"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
@@ -15,14 +17,14 @@ import (
 )
 
 type ProjectPage struct {
-	waterMark                     string     // Watermark in top right corner of page
-	navBar                        []string   // Nav bar below the title
-	cursor                        int        // Used to track our cursor
-	projects, descriptions, links []string   // An array of strings of our projects and descriptions
-	help                          help.Model // The help bar at the bottom of the page
-	keys                          PPkeyMap   // Key map for our help model
-	termWidth, termHeight         int        // Size of the terminal
-	modelWidth, modelHeight       int        // Size of the model (not including help model)
+	waterMark                     string           // Watermark in top right corner of page
+	navBar                        []string         // Nav bar below the title
+	cursor                        int              // Used to track our cursor
+	projects, descriptions, links []string         // An array of strings of our projects and descriptions
+	help                          help.Model       // The help bar at the bottom of the page
+	keys                          helpers.PPkeyMap // Key map for our help model
+	termWidth, termHeight         int              // Size of the terminal
+	modelWidth, modelHeight       int              // Size of the model (not including help model)
 }
 
 func CreateProjectPage() ProjectPage {
@@ -62,9 +64,10 @@ func CreateProjectPage() ProjectPage {
 		descriptions: descriptions,
 		links:        links,
 		help:         help.New(),
-		keys:         PPkeys, // Sets our keymap to the project page keys
-		modelWidth:   66,     // Change to actual model width
-		modelHeight:  24,     // Change to actual model height
+		keys:         helpers.PPkeys, // Sets our keymap to the project page keys
+		termHeight:   28,
+		modelWidth:   66, // Change to actual model width
+		modelHeight:  24, // Change to actual model height
 	}
 }
 
@@ -110,6 +113,11 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Copy link to clipboard
 		case "c":
+			cmd := exec.Command("sh", "-c", "echo '"+p.links[p.cursor]+"' | xclip -selection clipboard")
+			err := cmd.Run()
+			if err != nil {
+				panic(err)
+			}
 
 		// Move cursor up
 		case "up", "w":
