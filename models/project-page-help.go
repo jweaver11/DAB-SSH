@@ -15,20 +15,23 @@ type PPkeyMap struct {
 	Navigate key.Binding
 	Quit     key.Binding
 	Tab      key.Binding
+	Copy     key.Binding
+	Help     key.Binding
 }
 
 // Built in function from the help package that shows our mini help view at the bottom of our active model
 // It is part of the key.Map interface
 func (k PPkeyMap) ShortHelp() []key.Binding {
-	return []key.Binding{k.Navigate, k.Enter, k.Tab, k.Quit}
+	return []key.Binding{k.Tab, k.Enter, k.Help, k.Quit}
 }
 
 // Built in function from the help package that shows our full help view at the bottom of our active model
 // It is part of the key.Map interface
 func (k PPkeyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.Navigate, k.Tab}, // First Collumn
+		{k.Navigate, k.Tab}, // First collumn
 		{k.Enter, k.Quit},   // Second collumn
+		{k.Help, k.Copy},    // Third collumn
 	}
 }
 
@@ -36,7 +39,7 @@ func (k PPkeyMap) FullHelp() [][]key.Binding {
 var PPkeys = PPkeyMap{
 	Enter: key.NewBinding(
 		key.WithKeys("enter"),
-		key.WithHelp("enter", "select project"),
+		key.WithHelp("enter", "select"),
 	),
 	Quit: key.NewBinding(
 		key.WithKeys("q"),
@@ -49,5 +52,13 @@ var PPkeys = PPkeyMap{
 	Tab: key.NewBinding(
 		key.WithKeys("tab"),
 		key.WithHelp("tab", "next page"),
+	),
+	Copy: key.NewBinding(
+		key.WithKeys("c"),
+		key.WithHelp("c", "copy"),
+	),
+	Help: key.NewBinding(
+		key.WithKeys("?"),
+		key.WithHelp("?", "help"),
 	),
 }
