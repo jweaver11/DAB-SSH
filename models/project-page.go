@@ -15,14 +15,14 @@ import (
 )
 
 type ProjectPage struct {
-	waterMark               string     // Watermark in top right corner of page
-	navBar                  []string   // Nav bar below the title
-	cursor                  int        // Used to track our cursor
-	projects, descriptions  []string   // An array of strings of our projects and descriptions
-	help                    help.Model // The help bar at the bottom of the page
-	keys                    PPkeyMap   // Key map for our help model
-	termWidth, termHeight   int        // Size of the terminal
-	modelWidth, modelHeight int        // Size of the model (not including help model)
+	waterMark                     string     // Watermark in top right corner of page
+	navBar                        []string   // Nav bar below the title
+	cursor                        int        // Used to track our cursor
+	projects, descriptions, links []string   // An array of strings of our projects and descriptions
+	help                          help.Model // The help bar at the bottom of the page
+	keys                          PPkeyMap   // Key map for our help model
+	termWidth, termHeight         int        // Size of the terminal
+	modelWidth, modelHeight       int        // Size of the model (not including help model)
 }
 
 func CreateProjectPage() ProjectPage {
@@ -38,11 +38,20 @@ func CreateProjectPage() ProjectPage {
 
 	// Sets our projects
 	projects := []string{"Buccaneers of the Blockchain",
-		"SSH App"}
+		"SSH App",
+		"Discord",
+		"AI Development"}
 
 	// Sets the short descriptions
 	descriptions := []string{"NFT buccaneers that look pretty darn cool",
-		"The SSH app you are currently using right now"}
+		"The SSH app you are currently using right now",
+		"The official DAB discord server",
+		"Artfifical Intelligence of the future"}
+
+	links := []string{"https://buccaneers.io",
+		"https://github.com/jweaver11/DAB-SSH",
+		"https://discord.com/invite/dabinc",
+		"AI.org bozo"}
 
 	// Returns our newly created model
 	return ProjectPage{
@@ -51,10 +60,11 @@ func CreateProjectPage() ProjectPage {
 		cursor:       cursor,
 		projects:     projects,
 		descriptions: descriptions,
+		links:        links,
 		help:         help.New(),
 		keys:         PPkeys, // Sets our keymap to the project page keys
 		modelWidth:   66,     // Change to actual model width
-		modelHeight:  12,     // Change to actual model height
+		modelHeight:  24,     // Change to actual model height
 	}
 }
 
@@ -94,9 +104,12 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Switches between full help view
 		case "?":
-			if p.termHeight-p.modelHeight > 4 {
+			if p.termHeight-p.modelHeight >= 4 {
 				p.help.ShowAll = !p.help.ShowAll
 			}
+
+		// Copy link to clipboard
+		case "c":
 
 		// Move cursor up
 		case "up", "w":
@@ -146,7 +159,7 @@ func (p ProjectPage) View() string {
 	// Adds the help bar at the bottom
 	fullHelpView := p.help.View(p.keys)
 
-	// RENDERING OUR MODEL *********************
+	// RENDERING OUR MODEL |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 	// Addds the watermark
 	s += styling.WaterMarkStyle.Render(p.waterMark) + "\n\n"
 
@@ -165,7 +178,7 @@ func (p ProjectPage) View() string {
 	for i := range p.projects {
 
 		// Reset formatting
-		styling.SelectedProjectStyle.UnsetFaint()
+		styling.SelectedProjectStyle.UnsetFaint().UnsetForeground()
 
 		// Sets cursor to blank if not selected
 		cursor := "  "
@@ -178,22 +191,18 @@ func (p ProjectPage) View() string {
 
 		// Adds the project and description
 		s += styling.SelectedProjectStyle.Render(cursor+p.projects[i]) + "\n"
-		s += styling.SelectedProjectStyle.UnsetForeground().Faint(true).Render("   "+p.descriptions[i]) + "\n\n"
+		s += styling.SelectedProjectStyle.UnsetForeground().Faint(true).Render("   "+p.descriptions[i]) + "\n"
+		s += styling.SelectedProjectStyle.UnsetFaint().Foreground(lipgloss.Color("25")).Render("    "+p.links[i]) + "\n\n\n"
 	}
 
 	// Counts empty lines to put help model at bottom of terminal
-	helpHeight := p.termHeight - strings.Count(s, "\n") - 2
-	if helpHeight < 0 {
-		helpHeight = 0
-	}
-
-	// Makes room for full help view
-	if helpHeight > 3 && p.help.ShowAll == true {
-		helpHeight -= 3
+	emptyLines := p.termHeight - strings.Count(s, "\n") - 3
+	if emptyLines < 0 {
+		emptyLines = 0
 	}
 
 	// Add empty lines if there are any to bottom of terminal
-	s += strings.Repeat("\n", helpHeight)
+	s += strings.Repeat("\n", emptyLines)
 
 	// Render help bar in correct styling
 	s += styling.HelpBarStyle.Render(fullHelpView)
