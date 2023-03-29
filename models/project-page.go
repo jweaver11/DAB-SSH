@@ -50,10 +50,16 @@ func CreateProjectPage() ProjectPage {
 		"The official DAB discord server",
 		"Artfifical Intelligence of the future"}
 
+	// Sets the links
 	links := []string{"https://buccaneers.io",
 		"https://github.com/jweaver11/DAB-SSH",
 		"https://discord.com/invite/dabinc",
 		"AI.org bozo"}
+
+	// Sets the help model and styling
+	help := help.New()
+	help.Styles.ShortKey = styling.PPHelpBarStyle
+	help.Styles.FullKey = styling.PPHelpBarStyle
 
 	// Returns our newly created model
 	return ProjectPage{
@@ -63,7 +69,7 @@ func CreateProjectPage() ProjectPage {
 		projects:     projects,
 		descriptions: descriptions,
 		links:        links,
-		help:         help.New(),
+		help:         help,
 		keys:         helpers.PPkeys, // Sets our keymap to the project page keys
 		termHeight:   28,
 		modelWidth:   66, // Change to actual model width
@@ -174,7 +180,7 @@ func (p ProjectPage) View() string {
 	// Adds the navbar and highlights the selected page
 	for i := range p.navBar {
 		if i == 0 {
-			s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render(p.navBar[i]) + "		"
+			s += styling.NavBarStyle.Foreground(lipgloss.Color("#7D56F4")).Render(p.navBar[i]) + "		"
 		} else {
 			s += styling.NavBarStyle.UnsetForeground().UnsetFaint().Render(p.navBar[i]) + "		"
 		}
@@ -194,13 +200,17 @@ func (p ProjectPage) View() string {
 		// Sets our cursor to dot if selected
 		if p.cursor == i {
 			cursor = "• "
-			styling.SelectedProjectStyle.Foreground(lipgloss.Color("#7D56F4"))
+			styling.SelectedProjectStyle.Foreground(lipgloss.Color("12"))
 		}
 
 		// Adds the project and description
 		s += styling.SelectedProjectStyle.Render(cursor+p.projects[i]) + "\n"
 		s += styling.SelectedProjectStyle.UnsetForeground().Faint(true).Render("   "+p.descriptions[i]) + "\n"
-		s += styling.SelectedProjectStyle.UnsetFaint().Foreground(lipgloss.Color("25")).Render("    "+p.links[i]) + "\n\n\n"
+		if cursor == "• " {
+			s += styling.SelectedProjectStyle.UnsetFaint().Foreground(lipgloss.Color("25")).Render("    "+p.links[i]) + "\n\n\n"
+		} else {
+			s += styling.SelectedProjectStyle.Faint(true).Foreground(lipgloss.Color("25")).Render("    "+p.links[i]) + "\n\n\n"
+		}
 	}
 
 	// Counts empty lines to put help model at bottom of terminal
