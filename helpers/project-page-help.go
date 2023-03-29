@@ -11,12 +11,12 @@ import (
 // Sets a keymap struct to store the controls and key bind variables
 // So they can be called on later for the help view
 type PPkeyMap struct {
-	Enter    key.Binding
-	Navigate key.Binding
-	Quit     key.Binding
 	Tab      key.Binding
-	Copy     key.Binding
+	Enter    key.Binding
 	Help     key.Binding
+	Quit     key.Binding
+	Navigate key.Binding
+	Copy     key.Binding
 }
 
 // Built in function from the help package that shows our mini help view at the bottom of our active model
@@ -29,9 +29,9 @@ func (k PPkeyMap) ShortHelp() []key.Binding {
 // It is part of the key.Map interface
 func (k PPkeyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.Navigate, k.Tab}, // First collumn
-		{k.Enter, k.Quit},   // Second collumn
-		{k.Help, k.Copy},    // Third collumn
+		{k.Tab, k.Enter},     // First collumn
+		{k.Help, k.Quit},     // Second collumn
+		{k.Navigate, k.Copy}, // Third collumn
 	}
 }
 
