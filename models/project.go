@@ -16,14 +16,14 @@ import (
 )
 
 type ProjectPage struct {
-	waterMark                     string           // Watermark in top right corner of page
-	navBar                        []string         // Nav bar below the title
-	cursor                        int              // Used to track our cursor
-	projects, descriptions, links []string         // An array of strings of our projects and descriptions
-	help                          help.Model       // The help bar at the bottom of the page
-	keys                          helpers.PPkeyMap // Key map for our help model
-	termWidth, termHeight         int              // Size of the terminal
-	modelWidth, modelHeight       int              // Size of the model (not including help model)
+	waterMark                string           // Watermark in top right corner of page
+	navBar                   []string         // Nav bar below the title
+	cursor                   int              // Used to track our cursor
+	projects, summary, links []string         // An array of strings of our projects and descriptions
+	help                     help.Model       // The help bar at the bottom of the page
+	keys                     helpers.PPkeyMap // Key map for our help model
+	termWidth, termHeight    int              // Size of the terminal
+	modelWidth, modelHeight  int              // Size of the model (not including help model)
 }
 
 func CreateProjectPage() ProjectPage {
@@ -44,7 +44,7 @@ func CreateProjectPage() ProjectPage {
 		"AI Development"}
 
 	// Sets the short descriptions
-	descriptions := []string{"NFT buccaneers that look pretty darn cool",
+	summary := []string{"NFT buccaneers that look pretty darn cool",
 		"The SSH app you are currently using right now",
 		"The official DAB discord server",
 		"Artfifical Intelligence of the future"}
@@ -62,17 +62,17 @@ func CreateProjectPage() ProjectPage {
 
 	// Returns our newly created model
 	return ProjectPage{
-		waterMark:    WM,
-		navBar:       NB,
-		cursor:       cursor,
-		projects:     projects,
-		descriptions: descriptions,
-		links:        links,
-		help:         help,
-		keys:         helpers.PPkeys, // Sets our keymap to the project page keys
-		termHeight:   28,             // Init terminal height to not break model
-		modelWidth:   66,             // Change to actual model width
-		modelHeight:  24,             // Change to actual model height
+		waterMark:   WM,
+		navBar:      NB,
+		cursor:      cursor,
+		projects:    projects,
+		summary:     summary,
+		links:       links,
+		help:        help,
+		keys:        helpers.PPkeys, // Sets our keymap to the project page keys
+		termHeight:  28,             // Init terminal height to not break model
+		modelWidth:  66,             // Change to actual model width
+		modelHeight: 24,             // Change to actual model height
 	}
 }
 
@@ -136,7 +136,7 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return p, cmd
 
 		case "enter":
-			return CreateDescriptionPage(p.cursor, p.descriptions[p.cursor]), tea.ClearScreen
+			return CreateDescriptionPage(p.cursor, p.summary[p.cursor]), tea.ClearScreen
 		}
 
 	}
@@ -202,7 +202,7 @@ func (p ProjectPage) View() string {
 
 		// Adds the project and description
 		s += styling.SelectedProjectStyle.Render(cursor+p.projects[i]) + "\n"
-		s += styling.SelectedProjectStyle.UnsetForeground().Faint(true).Render("   "+p.descriptions[i]) + "\n"
+		s += styling.SelectedProjectStyle.UnsetForeground().Faint(true).Render("   "+p.summary[i]) + "\n"
 		if cursor == "• " {
 			s += styling.SelectedProjectStyle.UnsetFaint().Foreground(lipgloss.Color("25")).Render("    "+p.links[i]) + "\n\n\n"
 		} else {
