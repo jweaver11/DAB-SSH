@@ -29,7 +29,7 @@ type TitlePage struct {
 func CreateTitlePage() TitlePage {
 
 	// Sets the title
-	title := "Digital Art Brokers"
+	title := "Digital Art Brokers Official SSH Server"
 
 	// Sets the watermark
 	WM := " DAB "
@@ -40,7 +40,7 @@ func CreateTitlePage() TitlePage {
 		waterMark:        WM,
 		help:             help.New(),     // Creates a new help model
 		keys:             helpers.WPkeys, // Sets our keymap to the welcome page keymap
-		modelWidth:       32,
+		modelWidth:       52,
 		bigModelHeight:   29,
 		smallModelHeight: 14,
 	}
