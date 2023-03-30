@@ -8,7 +8,6 @@ package models
 import (
 	"DAB-SSH/helpers"
 	"DAB-SSH/styling"
-	"os/exec"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
@@ -117,13 +116,8 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				p.help.ShowAll = !p.help.ShowAll
 			}
 
-		// Copy link to clipboard
+		// Copy link to clipboard (doesnt work)
 		case "c":
-			cmd := exec.Command("sh", "-c", "echo '"+p.links[p.cursor]+"' | xclip -selection clipboard")
-			err := cmd.Run()
-			if err != nil {
-				panic(err)
-			}
 
 		// Move cursor up
 		case "up", "w":
@@ -140,6 +134,9 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Move to next page
 		case "tab":
 			return p, cmd
+
+		case "enter":
+			return CreateDescriptionPage(p.cursor), tea.ClearScreen
 		}
 
 	}
