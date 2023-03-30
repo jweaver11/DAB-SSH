@@ -7,6 +7,6 @@ import "github.com/charmbracelet/lipgloss"
 var WPHeaderStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("12"))
 
-var PirateStyle = lipgloss.NewStyle().
+var LogoStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("50")).
 	PaddingLeft(4)
