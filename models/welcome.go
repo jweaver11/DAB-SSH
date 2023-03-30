@@ -141,7 +141,7 @@ func (t TitlePage) View() string {
 	s += styling.WaterMarkStyle.Render(t.waterMark) + "\n\n"
 
 	// Adds the pirate picture
-	s += styling.PirateStyle.Render(logo) + "\n\n"
+	s += styling.LogoStyle.Render(logo) + "\n\n"
 
 	// Counts empty lines to put help model at bottom of terminal
 	helpHeight := t.termHeight - strings.Count(s, "\n") - 3
