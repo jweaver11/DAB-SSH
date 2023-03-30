@@ -13,3 +13,7 @@ var NavBarStyle = lipgloss.NewStyle().
 
 var HelpBarStyle = lipgloss.NewStyle().
 	PaddingLeft(2)
+
+var BorderStyle = lipgloss.NewStyle().
+	PaddingLeft(2).
+	PaddingTop(1)
