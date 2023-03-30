@@ -209,7 +209,7 @@ func (p ProjectPage) View() string {
 		if cursor == "• " {
 			s += styling.SelectedProjectStyle.UnsetFaint().Foreground(lipgloss.Color("25")).Render("    "+p.links[i]) + "\n\n\n"
 		} else {
-			s += styling.SelectedProjectStyle.Faint(true).Foreground(lipgloss.Color("25")).Render("    "+p.links[i]) + "\n\n\n"
+			s += styling.SelectedProjectStyle.Faint(true).Foreground(lipgloss.Color("12")).Render("    "+p.links[i]) + "\n\n\n"
 		}
 	}
 
