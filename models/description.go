@@ -1,33 +1,32 @@
 package models
 
 import (
+	"DAB-SSH/styling"
+
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
 type DescriptionPage struct {
 	waterMark               string     // Watermark in top right corner of page
-	navBar                  []string   // Nav bar below the title
+	summary                 string     // Short summary of project at top of page
 	description             string     // Actual description of the project
 	help                    help.Model // Help bar at bottom of page
 	termWidth, termHeight   int        // Size of the terminal
 	modelWidth, modelHeight int        // Size of the model (not including help model)
 }
 
-func CreateDescriptionPage(projectName int) DescriptionPage {
+func CreateDescriptionPage(projectName int, summary string) DescriptionPage {
 
 	// Sets the watermark
 	WM := " DAB "
-
-	// Sets the navbar values
-	NB := []string{"Projects", "About"}
 
 	// Sets the description passed through
 	description := Descriptions[projectName]
 
 	return DescriptionPage{
 		waterMark:   WM,
-		navBar:      NB,
+		summary:     summary,
 		description: description,
 	}
 }
@@ -45,7 +44,38 @@ func (d DescriptionPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (d DescriptionPage) View() string {
-	return d.description
+
+	// Our s string to build our model
+	var s string
+
+	// Size to return our model later
+	var width, height int
+
+	// Logic for setting terminal width to not break model
+	if d.termWidth <= d.modelWidth {
+		width = d.modelWidth
+	} else {
+		width = d.termWidth
+	}
+
+	// Logic for setting terminal height to not break model
+	if d.termHeight <= d.modelHeight {
+		height = d.modelHeight
+	} else {
+		height = d.termHeight
+	}
+
+	// RENDERING OUR MODEL |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
+	// Addds the watermark
+	s += styling.WaterMarkStyle.Render(d.waterMark) + "\n\n"
+
+	s += d.summary
+
+	s += "\n\n\n"
+
+	s += d.description
+
+	return styling.BorderStyle.Width(width).Height(height).Render(s)
 }
 
 var Descriptions = [4]string{
