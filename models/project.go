@@ -70,9 +70,9 @@ func CreateProjectPage() ProjectPage {
 		links:        links,
 		help:         help,
 		keys:         helpers.PPkeys, // Sets our keymap to the project page keys
-		termHeight:   28,
-		modelWidth:   66, // Change to actual model width
-		modelHeight:  24, // Change to actual model height
+		termHeight:   28,             // Init terminal height to not break model
+		modelWidth:   66,             // Change to actual model width
+		modelHeight:  24,             // Change to actual model height
 	}
 }
 
@@ -136,7 +136,7 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return p, cmd
 
 		case "enter":
-			return CreateDescriptionPage(p.cursor), tea.ClearScreen
+			return CreateDescriptionPage(p.cursor, p.descriptions[p.cursor]), tea.ClearScreen
 		}
 
 	}
