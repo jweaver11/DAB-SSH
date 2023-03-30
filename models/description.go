@@ -1,13 +1,17 @@
 package models
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	"github.com/charmbracelet/bubbles/help"
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 type DescriptionPage struct {
-	waterMark               string   // Watermark in top right corner of page
-	navBar                  []string // Nav bar below the title
-	description             string   // Actual description of the project
-	termWidth, termHeight   int      // Size of the terminal
-	modelWidth, modelHeight int      // Size of the model (not including help model)
+	waterMark               string     // Watermark in top right corner of page
+	navBar                  []string   // Nav bar below the title
+	description             string     // Actual description of the project
+	help                    help.Model // Help bar at bottom of page
+	termWidth, termHeight   int        // Size of the terminal
+	modelWidth, modelHeight int        // Size of the model (not including help model)
 }
 
 func CreateDescriptionPage(projectName int) DescriptionPage {
