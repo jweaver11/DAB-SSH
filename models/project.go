@@ -82,6 +82,7 @@ func (p ProjectPage) Init() tea.Cmd {
 	return nil
 }
 
+// Updates our model everytime a key event happens, mainly window resizes and key presses
 func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	// Sets cmd as a tea command that can be easily changed later
@@ -135,8 +136,9 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "tab":
 			return p, cmd
 
+		// Returns description page of selected project
 		case "enter":
-			return CreateDescriptionPage(p.cursor, p.summary[p.cursor]), tea.ClearScreen
+			return CreateDescriptionPage(p.cursor, p.projects[p.cursor], p.summary[p.cursor]), tea.ClearScreen
 		}
 
 	}
@@ -145,6 +147,7 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return p, cmd
 }
 
+// Renders our model formatted to be viewed, then returns as a string
 func (p ProjectPage) View() string {
 
 	// Our s string to build our model
