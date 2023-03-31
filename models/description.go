@@ -8,7 +8,7 @@ import (
 )
 
 type DescriptionPage struct {
-	waterMark               string     // Watermark in top right corner of page
+	projectName             string     // Watermark in top left corner of page
 	summary                 string     // Short summary of project at top of page
 	description             string     // Actual description of the project
 	help                    help.Model // Help bar at bottom of page
@@ -16,33 +16,53 @@ type DescriptionPage struct {
 	modelWidth, modelHeight int        // Size of the model (not including help model)
 }
 
-func CreateDescriptionPage(projectName int, summary string) DescriptionPage {
-
-	// Sets the watermark
-	WM := " DAB "
+func CreateDescriptionPage(projectAddress int, projectName string, summary string) DescriptionPage {
 
 	// Sets the description passed through
-	description := Descriptions[projectName]
+	description := Descriptions[projectAddress]
 
+	// Return our created model
 	return DescriptionPage{
-		waterMark:   WM,
+		projectName: projectName,
 		summary:     summary,
 		description: description,
 	}
 }
 
+// Initializes our struct as a bubble tea model
 func (d DescriptionPage) Init() tea.Cmd {
 	return nil
 }
 
+// Updates our model everytime a key event happens, mainly window resizes and key presses
 func (d DescriptionPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	// Sets cmd as a tea command that can be easily changed later
 	var cmd tea.Cmd
 
+	// Sets msg as a switch for all events
+	switch msg := msg.(type) {
+
+	// Runs whenever the window is resized or first loaded
+	case tea.WindowSizeMsg:
+
+		// All key presses
+	case tea.KeyMsg:
+
+		// Converts the press into a string
+		switch msg.String() {
+
+		// Back to project page
+		case "esc":
+			return CreateProjectPage(), nil
+
+		}
+	}
+
 	return d, cmd
 }
 
+// Renders our model formatted to be viewed, then returns as a string
 func (d DescriptionPage) View() string {
 
 	// Our s string to build our model
@@ -67,7 +87,7 @@ func (d DescriptionPage) View() string {
 
 	// RENDERING OUR MODEL |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 	// Addds the watermark
-	s += styling.WaterMarkStyle.Render(d.waterMark) + "\n\n"
+	s += d.projectName + "\n\n"
 
 	s += d.summary
 
