@@ -10,6 +10,7 @@ import (
 	"DAB-SSH/styling"
 	"strings"
 
+	"github.com/atotto/clipboard"
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -119,6 +120,11 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Copy link to clipboard (doesnt work)
 		case "c":
+			link := p.links[p.cursor]
+			err := clipboard.WriteAll(link)
+			if err != nil {
+				panic(err)
+			}
 
 		// Move cursor up
 		case "up", "w":
