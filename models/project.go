@@ -118,7 +118,7 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				p.help.ShowAll = !p.help.ShowAll
 			}
 
-		// Copy link to clipboard (doesnt work)
+		// Copy link to clipboard
 		case "c":
 			link := p.links[p.cursor]
 			err := clipboard.WriteAll(link)
