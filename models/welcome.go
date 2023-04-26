@@ -52,6 +52,14 @@ func (t TitlePage) Init() tea.Cmd {
 	return nil
 }
 
+/*
+__    __  .______    _______       ___   .___________. _______
+|  |  |  | |   _  \  |       \     /   \  |           ||   ____|
+|  |  |  | |  |_)  | |  .--.  |   /  ^  \ `---|  |----`|  |__
+|  |  |  | |   ___/  |  |  |  |  /  /_\  \    |  |     |   __|
+|  `--'  | |  |      |  '--'  | /  _____  \   |  |     |  |____
+ \______/  | _|      |_______/ /__/     \__\  |__|     |_______|
+*/
 // Updates our model everytime a key event happens, mainly window resizes and key presses
 func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
@@ -91,6 +99,14 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return t, cmd
 }
 
+/*
+____    ____  __   ___________    __    ____
+\   \  /   / |  | |   ____\   \  /  \  /   /
+ \   \/   /  |  | |  |__   \   \/    \/   /
+  \      /   |  | |   __|   \            /
+   \    /    |  | |  |____   \    /\    /
+    \__/     |__| |_______|   \__/  \__/
+*/
 // Renders our model formatted to be viewed, then returns as a string
 func (t TitlePage) View() string {
 
