@@ -107,13 +107,17 @@ func (d DescriptionPage) View() string {
 	}
 
 	// RENDERING OUR MODEL |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
+
 	// Addds the watermark
 	s += d.projectName + "\n\n"
 
+	// Add the summary
 	s += d.summary
 
+	// Adds spacing
 	s += "\n\n\n"
 
+	// Adds the description
 	s += d.description
 
 	return styling.BorderStyle.Width(width).Height(height).Render(s)
