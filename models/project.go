@@ -196,7 +196,8 @@ func (p ProjectPage) View() string {
 	fullHelpView := p.help.View(p.keys)
 
 	// RENDERING OUR MODEL |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
-	// Addds the watermark
+
+	// Adds the watermark
 	s += styling.WaterMarkStyle.Render(p.waterMark) + "\n\n"
 
 	// Adds the navbar and highlights the selected page
@@ -223,14 +224,17 @@ func (p ProjectPage) View() string {
 		if p.cursor == i {
 			cursor = "• "
 			styling.SelectedProjectStyle.Foreground(lipgloss.Color("12"))
+		} else {
+			styling.SelectedProjectStyle.Faint(true).Foreground(lipgloss.Color("12")) //25
 		}
 
 		// Adds the project and description
 		s += styling.SelectedProjectStyle.Render(cursor+p.projects[i]) + "\n"
-		s += styling.SelectedProjectStyle.UnsetForeground().Faint(true).Render("   "+p.summary[i]) + "\n"
 		if cursor == "• " {
+			s += styling.SelectedProjectStyle.UnsetFaint().Foreground(lipgloss.Color("#ffffff")).Render("   "+p.summary[i]) + "\n"
 			s += styling.SelectedProjectStyle.UnsetFaint().Foreground(lipgloss.Color("25")).Render("    "+p.links[i]) + "\n\n\n"
 		} else {
+			s += styling.SelectedProjectStyle.UnsetForeground().Faint(true).Render("   "+p.summary[i]) + "\n"
 			s += styling.SelectedProjectStyle.Faint(true).Foreground(lipgloss.Color("12")).Render("    "+p.links[i]) + "\n\n\n"
 		}
 	}
