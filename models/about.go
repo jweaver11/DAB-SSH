@@ -4,15 +4,21 @@ Art Brokers and some of the work they do. */
 package models
 
 import (
+	"DAB-SSH/styling"
+	"fmt"
+
 	"github.com/charmbracelet/bubbles/help"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 type AboutPage struct {
-	waterMark string     // Watermark in top right corner of page
-	navBar    []string   // Nav bar below the title
-	content   string     // The text to describe DAB
-	help      help.Model // The help bar at the bottom of the page
+	waterMark               string     // Watermark in top left corner of page
+	navBar                  []string   // Nav bar below the title
+	content                 string     // The text to describe DAB
+	help                    help.Model // The help bar at the bottom of the page
+	termWidth, termHeight   int        // Size of the terminal
+	modelWidth, modelHeight int        // Size of the model (not including help model)
 }
 
 func CreateAboutPage() AboutPage {
@@ -23,9 +29,13 @@ func CreateAboutPage() AboutPage {
 	// Sets the navbar values
 	NB := []string{"Projects", "About"}
 
+	content := "deez bolls my guy"
+
+	// Returns our created model
 	return AboutPage{
 		waterMark: WM,
 		navBar:    NB,
+		content:   content,
 	}
 }
 
@@ -58,7 +68,11 @@ func (a AboutPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Converts the press into a string
 		switch msg.String() {
+
+		case "tab":
+			return CreateProjectPage(), tea.ClearScreen
 		}
+
 	}
 
 	return a, cmd
@@ -74,5 +88,42 @@ ____    ____  __   ___________    __    ____
 */
 // Renders our model formatted to be viewed, then returns as a string
 func (a AboutPage) View() string {
-	return "deez bols bozo"
+	// Our s string to build our model
+	var s string
+
+	// Size to return our model later
+	var width, height int
+
+	// Logic for setting terminal width to not break model
+	if a.termWidth <= a.modelWidth {
+		width = a.modelWidth
+	} else {
+		width = a.termWidth
+	}
+
+	// Logic for setting terminal height to not break model
+	if a.termHeight <= a.modelHeight {
+		height = a.modelHeight
+	} else {
+		height = a.termHeight
+	}
+
+	// RENDERING OUR MODEL |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
+
+	// temp
+	fmt.Println(width + height)
+
+	// Adds the watermark
+	s += styling.WaterMarkStyle.Render(a.waterMark) + "\n\n"
+
+	// Adds the navbar and highlights the selected page
+	for i := range a.navBar {
+		if i == 1 {
+			s += styling.NavBarStyle.Foreground(lipgloss.Color("#7D56F4")).Render(a.navBar[i]) + "		"
+		} else {
+			s += styling.NavBarStyle.UnsetForeground().UnsetFaint().Render(a.navBar[i]) + "		"
+		}
+	}
+
+	return s
 }
