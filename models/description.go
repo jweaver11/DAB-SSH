@@ -18,6 +18,17 @@ type DescriptionPage struct {
 	modelWidth, modelHeight int        // Size of the model (not including help model)
 }
 
+/*
+  ______ .______       _______     ___   .___________. _______     .___  ___.   ______    _______   _______  __
+ /      ||   _  \     |   ____|   /   \  |           ||   ____|    |   \/   |  /  __  \  |       \ |   ____||  |
+|  ,----'|  |_)  |    |  |__     /  ^  \ `---|  |----`|  |__       |  \  /  | |  |  |  | |  .--.  ||  |__   |  |
+|  |     |      /     |   __|   /  /_\  \    |  |     |   __|      |  |\/|  | |  |  |  | |  |  |  ||   __|  |  |
+|  `----.|  |\  \----.|  |____ /  _____  \   |  |     |  |____     |  |  |  | |  `--'  | |  '--'  ||  |____ |  `----.
+ \______|| _| `._____||_______/__/     \__\  |__|     |_______|    |__|  |__|  \______/  |_______/ |_______||_______|
+
+*/
+
+// Creates and gives our model values
 func CreateDescriptionPage(projectAddress int, projectName string, summary string) DescriptionPage {
 
 	// Sets the description passed through
@@ -107,6 +118,7 @@ func (d DescriptionPage) View() string {
 	}
 
 	// RENDERING OUR MODEL |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
+	// |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 
 	// Addds the watermark
 	s += d.projectName + "\n\n"
