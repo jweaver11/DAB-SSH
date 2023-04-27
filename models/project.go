@@ -17,7 +17,7 @@ import (
 )
 
 type ProjectPage struct {
-	waterMark                string           // Watermark in top right corner of page
+	waterMark                string           // Watermark in top left corner of page
 	navBar                   []string         // Nav bar below the title
 	cursor                   int              // Used to track our cursor
 	projects, summary, links []string         // An array of strings of our projects and descriptions
