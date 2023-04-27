@@ -27,6 +27,17 @@ type ProjectPage struct {
 	modelWidth, modelHeight  int              // Size of the model (not including help model)
 }
 
+/*
+  ______ .______       _______     ___   .___________. _______     .___  ___.   ______    _______   _______  __
+ /      ||   _  \     |   ____|   /   \  |           ||   ____|    |   \/   |  /  __  \  |       \ |   ____||  |
+|  ,----'|  |_)  |    |  |__     /  ^  \ `---|  |----`|  |__       |  \  /  | |  |  |  | |  .--.  ||  |__   |  |
+|  |     |      /     |   __|   /  /_\  \    |  |     |   __|      |  |\/|  | |  |  |  | |  |  |  ||   __|  |  |
+|  `----.|  |\  \----.|  |____ /  _____  \   |  |     |  |____     |  |  |  | |  `--'  | |  '--'  ||  |____ |  `----.
+ \______|| _| `._____||_______/__/     \__\  |__|     |_______|    |__|  |__|  \______/  |_______/ |_______||_______|
+
+*/
+
+// Creates and gives our model values
 func CreateProjectPage() ProjectPage {
 
 	// Sets the watermark
@@ -196,6 +207,7 @@ func (p ProjectPage) View() string {
 	fullHelpView := p.help.View(p.keys)
 
 	// RENDERING OUR MODEL |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
+	// |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 
 	// Adds the watermark
 	s += styling.WaterMarkStyle.Render(p.waterMark) + "\n\n"
@@ -203,9 +215,9 @@ func (p ProjectPage) View() string {
 	// Adds the navbar and highlights the selected page
 	for i := range p.navBar {
 		if i == 0 {
-			s += styling.NavBarStyle.Foreground(lipgloss.Color("#7D56F4")).Render(p.navBar[i]) + "		"
+			s += styling.NavBarStyle.Foreground(lipgloss.Color("#7D56F4")).Render(p.navBar[i]) + "            "
 		} else {
-			s += styling.NavBarStyle.UnsetForeground().UnsetFaint().Render(p.navBar[i]) + "		"
+			s += styling.NavBarStyle.UnsetForeground().UnsetFaint().Render(p.navBar[i]) + "            "
 		}
 	}
 
@@ -225,7 +237,7 @@ func (p ProjectPage) View() string {
 			cursor = "• "
 			styling.SelectedProjectStyle.Foreground(lipgloss.Color("12"))
 		} else {
-			styling.SelectedProjectStyle.Faint(true).Foreground(lipgloss.Color("12")) //25
+			styling.SelectedProjectStyle.Faint(true).Foreground(lipgloss.Color("12"))
 		}
 
 		// Adds the project and description
