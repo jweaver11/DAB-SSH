@@ -84,7 +84,7 @@ func (p ProjectPage) Init() tea.Cmd {
 }
 
 /*
-__    __  .______    _______       ___   .___________. _______
+ __    __  .______    _______       ___   .___________. _______
 |  |  |  | |   _  \  |       \     /   \  |           ||   ____|
 |  |  |  | |  |_)  | |  .--.  |   /  ^  \ `---|  |----`|  |__
 |  |  |  | |   ___/  |  |  |  |  /  /_\  \    |  |     |   __|
@@ -148,7 +148,7 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Move to next page
 		case "tab":
-			return p, cmd
+			return CreateAboutPage(), tea.ClearScreen
 
 		// Returns description page of selected project
 		case "enter":
