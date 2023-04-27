@@ -1,3 +1,6 @@
+/* Short about page that provides a description about Digital
+Art Brokers and some of the work they do. */
+
 package models
 
 import (
@@ -14,7 +17,16 @@ type AboutPage struct {
 
 func CreateAboutPage() AboutPage {
 
-	return AboutPage{}
+	// Sets the watermark
+	WM := " DAB "
+
+	// Sets the navbar values
+	NB := []string{"Projects", "About"}
+
+	return AboutPage{
+		waterMark: WM,
+		navBar:    NB,
+	}
 }
 
 // Initializes our struct as a bubble tea model
@@ -23,7 +35,7 @@ func (a AboutPage) Init() tea.Cmd {
 }
 
 /*
-__    __  .______    _______       ___   .___________. _______
+ __    __  .______    _______       ___   .___________. _______
 |  |  |  | |   _  \  |       \     /   \  |           ||   ____|
 |  |  |  | |  |_)  | |  .--.  |   /  ^  \ `---|  |----`|  |__
 |  |  |  | |   ___/  |  |  |  |  /  /_\  \    |  |     |   __|
