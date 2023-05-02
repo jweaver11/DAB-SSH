@@ -180,6 +180,7 @@ ____    ____  __   ___________    __    ____
    \    /    |  | |  |____   \    /\    /
     \__/     |__| |_______|   \__/  \__/
 */
+
 // Renders our model formatted to be viewed, then returns as a string
 func (p ProjectPage) View() string {
 

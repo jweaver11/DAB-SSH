@@ -75,7 +75,7 @@ var lilDABLogo string = `
 */
 
 // Creates and gives our model values
-func CreateTitlePage() WelcomePage {
+func CreateWelcomePage() WelcomePage {
 
 	// Sets the title
 	title := "Digital Art Brokers Official SSH Server"
@@ -156,6 +156,7 @@ ____    ____  __   ___________    __    ____
    \    /    |  | |  |____   \    /\    /
     \__/     |__| |_______|   \__/  \__/
 */
+
 // Renders our model formatted to be viewed, then returns as a string
 func (w WelcomePage) View() string {
 
