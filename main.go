@@ -4,6 +4,8 @@ package main
 // "ssh -p 1234 localhost"
 
 import (
+	//"DAB-SSH/models"
+
 	"DAB-SSH/models"
 	"context"
 	"fmt"
@@ -69,7 +71,7 @@ func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
 		return nil, nil
 	}
 
-	m := models.CreateTitlePage() // Sets m as our created title page
+	m := models.CreateWelcomePage() // Sets m as our created welcome page
 
 	return m, []tea.ProgramOption{tea.WithAltScreen()} // Puts our program in full screen mode
 }
