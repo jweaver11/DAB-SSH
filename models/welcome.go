@@ -15,7 +15,7 @@ import (
 )
 
 // Our title page as a struct outlining the elements of our title page
-type TitlePage struct {
+type WelcomePage struct {
 	title                            string           // The title
 	waterMark                        string           // Watermark in top right corner of page
 	help                             help.Model       // The help bar at the bottom of the page
@@ -75,7 +75,7 @@ var lilDABLogo string = `
 */
 
 // Creates and gives our model values
-func CreateTitlePage() TitlePage {
+func CreateTitlePage() WelcomePage {
 
 	// Sets the title
 	title := "Digital Art Brokers Official SSH Server"
@@ -84,7 +84,7 @@ func CreateTitlePage() TitlePage {
 	WM := " DAB "
 
 	// Returns our created model
-	return TitlePage{
+	return WelcomePage{
 		title:            title,
 		waterMark:        WM,
 		help:             help.New(),     // Creates a new help model
@@ -96,7 +96,7 @@ func CreateTitlePage() TitlePage {
 }
 
 // Initializes our struct as a bubble tea model
-func (t TitlePage) Init() tea.Cmd {
+func (w WelcomePage) Init() tea.Cmd {
 	// Returns no command
 	return nil
 }
@@ -110,7 +110,7 @@ func (t TitlePage) Init() tea.Cmd {
  \______/  | _|      |_______/ /__/     \__\  |__|     |_______|
 */
 // Updates our model everytime a key event happens, mainly window resizes and key presses
-func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (w WelcomePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	// Sets cmd as a tea command that can be easily changed later
 	var cmd tea.Cmd
@@ -122,11 +122,11 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 
 		// Sets the help model and main model width for sizing later
-		t.help.Width = msg.Width - styling.HelpBarStyle.GetPaddingLeft()
+		w.help.Width = msg.Width - styling.HelpBarStyle.GetPaddingLeft()
 
 		// Sets terminal width and height
-		t.termWidth = msg.Width
-		t.termHeight = msg.Height
+		w.termWidth = msg.Width
+		w.termHeight = msg.Height
 
 	// Handles all keyboard presses
 	case tea.KeyMsg:
@@ -136,7 +136,7 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// When q pressed, quit
 		case "q", "esc", "ctrl+c":
-			return t, tea.Quit
+			return w, tea.Quit
 
 		// If key pressed and not one above, move to next page
 		default:
@@ -145,7 +145,7 @@ func (t TitlePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	// Return our model and command
-	return t, cmd
+	return w, cmd
 }
 
 /*
@@ -157,7 +157,7 @@ ____    ____  __   ___________    __    ____
     \__/     |__| |_______|   \__/  \__/
 */
 // Renders our model formatted to be viewed, then returns as a string
-func (t TitlePage) View() string {
+func (w WelcomePage) View() string {
 
 	// Final string to be rendered through our border at the end
 	var s string
@@ -166,37 +166,37 @@ func (t TitlePage) View() string {
 	var width, height int
 
 	// Logic for setting terminal width to not break model
-	if t.termWidth <= t.modelWidth {
-		width = t.modelWidth
+	if w.termWidth <= w.modelWidth {
+		width = w.modelWidth
 	} else {
-		width = t.termWidth
+		width = w.termWidth
 	}
 
 	// Logic for setting terminal height to not break model
-	if t.termHeight <= t.smallModelHeight {
-		height = t.smallModelHeight
+	if w.termHeight <= w.smallModelHeight {
+		height = w.smallModelHeight
 	} else {
-		height = t.termHeight
+		height = w.termHeight
 	}
 
 	// Pirate string for easy return later
 	var logo string
 
 	// Sets the pirate ship to big or small one based on terminal size
-	if t.termHeight < t.bigModelHeight {
+	if w.termHeight < w.bigModelHeight {
 		logo = lilDABLogo
 	} else {
 		logo = BigDABLogo
 	}
 
 	// Adds the help bar at the bottom
-	fullHelpView := t.help.View(t.keys)
+	fullHelpView := w.help.View(w.keys)
 
 	// RENDERING OUR MODEL |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 	// |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 
 	// Adds the header
-	s += styling.WPHeaderStyle.Render(t.title)
+	s += styling.WPHeaderStyle.Render(w.title)
 
 	// Padding for the watermark to fit in corner of page
 	WMPadding := width - strings.Count(s, "")
@@ -205,13 +205,13 @@ func (t TitlePage) View() string {
 	s += strings.Repeat(" ", WMPadding-2)
 
 	// Addds the watermark
-	s += styling.WaterMarkStyle.Render(t.waterMark) + "\n\n"
+	s += styling.WaterMarkStyle.Render(w.waterMark) + "\n\n"
 
 	// Adds the pirate picture
 	s += styling.LogoStyle.Render(logo) + "\n\n"
 
 	// Counts empty lines to put help model at bottom of terminal
-	helpHeight := t.termHeight - strings.Count(s, "\n") - 3
+	helpHeight := w.termHeight - strings.Count(s, "\n") - 3
 	if helpHeight < 0 {
 		helpHeight = 0
 	}
