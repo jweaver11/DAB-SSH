@@ -34,6 +34,14 @@ func max(a, b int) int {
 	return b
 }
 
+const useHighPerformanceRenderer = false
+
+func (a AboutPage) headerView() string {
+	title := styling.WaterMarkStyle.Render(a.waterMark)
+	line := strings.Repeat("─", max(0, a.viewport.Width-lipgloss.Width(title)))
+	return lipgloss.JoinHorizontal(lipgloss.Center, title, line)
+}
+
 // Adds the page scrolling part at the bottom
 func (a AboutPage) footerView() string {
 	info := fmt.Sprintf("%3.f%%", a.viewport.ScrollPercent()*100)
@@ -75,7 +83,7 @@ func CreateAboutPage() AboutPage {
 		viewport:    viewport,
 		help:        help,
 		keys:        helpers.APkeys, // Sets our keymap to the about page keys
-		termHeight:  28,             // Init terminal height to not break model
+		termHeight:  28,             // Init terminal height to not break model 40
 		modelWidth:  66,             // Change to actual model width
 		modelHeight: 24,             // Change to actual model height
 	}
@@ -119,7 +127,10 @@ func (a AboutPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		a.termHeight = msg.Height
 
 		// Model height - helpbar
-		verticalMarginHeight := a.modelHeight - 4
+		headerHeight := lipgloss.Height(a.headerView())
+		footerHeight := lipgloss.Height(a.footerView())
+		//verticalMarginHeight := a.modelHeight - 4
+		verticalMarginHeight := headerHeight + footerHeight
 
 		if !a.ready {
 			// Since this program is using the full size of the viewport we
@@ -128,19 +139,30 @@ func (a AboutPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// quickly, though asynchronously, which is why we wait for them
 			// here.
 			a.viewport = viewport.New(msg.Width, msg.Height-verticalMarginHeight)
-			a.viewport.YPosition = 7 // Header height
-
-			//a.viewport.SetContent(Content)
+			a.viewport.YPosition = headerHeight
+			a.viewport.HighPerformanceRendering = useHighPerformanceRenderer
+			a.viewport.SetContent(Content)
 			a.ready = true
 
-			// This is only necessary for high perforaance rendering, which in
+			// This is only necessary for high performance rendering, which in
 			// most cases you won't need.
+			//
+			// Render the viewport one line below the header.
+			a.viewport.YPosition = headerHeight + 1
 
 			// Render the viewport one line below the header.
 			a.viewport.YPosition = 7 + 1
 		} else {
 			a.viewport.Width = msg.Width
 			a.viewport.Height = msg.Height - verticalMarginHeight
+		}
+
+		if useHighPerformanceRenderer {
+			// Render (or re-render) the whole viewport. Necessary both to
+			// initialize the viewport and when the window is resized.
+			//
+			// This is needed for high-performance rendering only.
+			cmds = append(cmds, viewport.Sync(a.viewport))
 		}
 
 	// All key presses
@@ -177,6 +199,7 @@ ____    ____  __   ___________    __    ____
    \    /    |  | |  |____   \    /\    /
     \__/     |__| |_______|   \__/  \__/
 */
+
 // Renders our model formatted to be viewed, then returns as a string
 func (a AboutPage) View() string {
 	// Our s string to build our model
@@ -206,7 +229,7 @@ func (a AboutPage) View() string {
 	// |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 
 	// Adds the watermark
-	s += styling.WaterMarkStyle.Render(a.waterMark) + "\n\n"
+	//s += styling.WaterMarkStyle.Render(a.waterMark) + "\n\n"
 
 	// Adds the navbar and highlights the selected page
 	for i := range a.navBar {
@@ -220,7 +243,7 @@ func (a AboutPage) View() string {
 	// Spacing
 	s += "\n\n\n"
 
-	s += a.viewport.View() + a.footerView()
+	s += a.headerView() + a.viewport.View() + a.footerView()
 
 	// Counts empty lines to put help model at bottom of terminal
 	emptyLines := a.termHeight - strings.Count(s, "\n") - 3

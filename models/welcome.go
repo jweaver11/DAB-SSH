@@ -20,7 +20,6 @@ type WelcomePage struct {
 	waterMark                        string           // Watermark in top right corner of page
 	help                             help.Model       // The help bar at the bottom of the page
 	keys                             helpers.WPkeyMap // Key map for our help model
-	termWidth, termHeight            int              // Size of the terminal
 	modelWidth                       int              // Size of the model
 	bigModelHeight, smallModelHeight int
 }
@@ -125,8 +124,8 @@ func (w WelcomePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		w.help.Width = msg.Width - styling.HelpBarStyle.GetPaddingLeft()
 
 		// Sets terminal width and height
-		w.termWidth = msg.Width
-		w.termHeight = msg.Height
+		TerminalWidth = msg.Width
+		TerminalHeight = msg.Height
 
 	// Handles all keyboard presses
 	case tea.KeyMsg:
@@ -167,24 +166,24 @@ func (w WelcomePage) View() string {
 	var width, height int
 
 	// Logic for setting terminal width to not break model
-	if w.termWidth <= w.modelWidth {
+	if TerminalWidth <= w.modelWidth {
 		width = w.modelWidth
 	} else {
-		width = w.termWidth
+		width = TerminalWidth
 	}
 
 	// Logic for setting terminal height to not break model
-	if w.termHeight <= w.smallModelHeight {
+	if TerminalHeight <= w.smallModelHeight {
 		height = w.smallModelHeight
 	} else {
-		height = w.termHeight
+		height = TerminalHeight
 	}
 
 	// Pirate string for easy return later
 	var logo string
 
 	// Sets the pirate ship to big or small one based on terminal size
-	if w.termHeight < w.bigModelHeight {
+	if TerminalHeight < w.bigModelHeight {
 		logo = lilDABLogo
 	} else {
 		logo = BigDABLogo
@@ -212,7 +211,7 @@ func (w WelcomePage) View() string {
 	s += styling.LogoStyle.Render(logo) + "\n\n"
 
 	// Counts empty lines to put help model at bottom of terminal
-	helpHeight := w.termHeight - strings.Count(s, "\n") - 3
+	helpHeight := TerminalHeight - strings.Count(s, "\n") - 3
 	if helpHeight < 0 {
 		helpHeight = 0
 	}

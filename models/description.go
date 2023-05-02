@@ -14,7 +14,6 @@ type DescriptionPage struct {
 	summary                 string     // Short summary of project at top of page
 	description             string     // Actual description of the project
 	help                    help.Model // Help bar at bottom of page
-	termWidth, termHeight   int        // Size of the terminal
 	modelWidth, modelHeight int        // Size of the model (not including help model)
 }
 
@@ -66,6 +65,8 @@ func (d DescriptionPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	// Runs whenever the window is resized or first loaded
 	case tea.WindowSizeMsg:
+		TerminalWidth = msg.Width
+		TerminalHeight = msg.Height
 
 	// All key presses
 	case tea.KeyMsg:
@@ -105,17 +106,17 @@ func (d DescriptionPage) View() string {
 	var width, height int
 
 	// Logic for setting terminal width to not break model
-	if d.termWidth <= d.modelWidth {
+	if TerminalWidth <= d.modelWidth {
 		width = d.modelWidth
 	} else {
-		width = d.termWidth
+		width = TerminalWidth
 	}
 
 	// Logic for setting terminal height to not break model
-	if d.termHeight <= d.modelHeight {
+	if TerminalHeight <= d.modelHeight {
 		height = d.modelHeight
 	} else {
-		height = d.termHeight
+		height = TerminalHeight
 	}
 
 	// RENDERING OUR MODEL |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|

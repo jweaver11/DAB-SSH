@@ -23,7 +23,6 @@ type ProjectPage struct {
 	projects, summary, links []string         // An array of strings of our projects and descriptions
 	help                     help.Model       // The help bar at the bottom of the page
 	keys                     helpers.PPkeyMap // Key map for our help model
-	termWidth, termHeight    int              // Size of the terminal
 	modelWidth, modelHeight  int              // Size of the model (not including help model)
 }
 
@@ -82,9 +81,8 @@ func CreateProjectPage() ProjectPage {
 		links:       links,
 		help:        help,
 		keys:        helpers.PPkeys, // Sets our keymap to the project page keys
-		termHeight:  28,             // Init terminal height to not break model
 		modelWidth:  66,             // Change to actual model width
-		modelHeight: 24,             // Change to actual model height
+		modelHeight: 24,             // Change to actual model height ... 28
 	}
 }
 
@@ -118,8 +116,8 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		p.help.Width = msg.Width - styling.HelpBarStyle.GetPaddingLeft()
 
 		// Sets terminal width and height
-		p.termWidth = msg.Width
-		p.termHeight = msg.Height
+		TerminalWidth = msg.Width
+		TerminalHeight = msg.Height
 
 	// All key presses
 	case tea.KeyMsg:
@@ -133,7 +131,7 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Switches between full help view
 		case "?":
-			if p.termHeight-p.modelHeight >= 4 {
+			if TerminalHeight-p.modelHeight >= 4 {
 				p.help.ShowAll = !p.help.ShowAll
 			}
 
@@ -191,17 +189,17 @@ func (p ProjectPage) View() string {
 	var width, height int
 
 	// Logic for setting terminal width to not break model
-	if p.termWidth <= p.modelWidth {
+	if TerminalWidth <= p.modelWidth {
 		width = p.modelWidth
 	} else {
-		width = p.termWidth
+		width = TerminalWidth
 	}
 
 	// Logic for setting terminal height to not break model
-	if p.termHeight <= p.modelHeight {
+	if TerminalHeight <= p.modelHeight {
 		height = p.modelHeight
 	} else {
-		height = p.termHeight
+		height = TerminalHeight
 	}
 
 	// Adds the help bar at the bottom
@@ -253,7 +251,7 @@ func (p ProjectPage) View() string {
 	}
 
 	// Counts empty lines to put help model at bottom of terminal
-	emptyLines := p.termHeight - strings.Count(s, "\n") - 3
+	emptyLines := TerminalHeight - strings.Count(s, "\n") - 3
 	if emptyLines < 0 {
 		emptyLines = 0
 	}
