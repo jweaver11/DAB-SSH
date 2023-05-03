@@ -198,28 +198,20 @@ func (w WelcomePage) View() string {
 	// Adds the header
 	s += styling.WPHeaderStyle.Render(w.title)
 
-	// Padding for the watermark to fit in corner of page
+	// Adds watermark with padding to fit top right of page
 	WMPadding := width - strings.Count(s, "")
-
-	// Adds padding for watermark
-	s += strings.Repeat(" ", WMPadding-2)
-
-	// Addds the watermark
+	s += strings.Repeat(" ", WMPadding)
 	s += styling.WaterMarkStyle.Render(w.waterMark) + "\n\n"
 
 	// Adds the pirate picture
 	s += styling.LogoStyle.Render(logo) + "\n\n"
 
-	// Counts empty lines to put help model at bottom of terminal
+	// Puts help model at bottom of terminal with correct styling
 	helpHeight := TerminalHeight - strings.Count(s, "\n") - 3
 	if helpHeight < 0 {
 		helpHeight = 0
 	}
-
-	// Add empty lines if there are any to bottom of terminal
 	s += strings.Repeat("\n", helpHeight)
-
-	// Render help bar in correct styling
 	s += styling.HelpBarStyle.Render(fullHelpView)
 
 	// Returns model with final styling
