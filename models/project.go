@@ -40,7 +40,7 @@ type ProjectPage struct {
 func CreateProjectPage() ProjectPage {
 
 	// Sets the navbar values
-	NB := []string{"Projects", "About"}
+	NB := []string{"• Projects", "About"}
 
 	// Sets the watermark
 	WM := " DAB "
@@ -147,13 +147,13 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 		// Move cursor up
-		case "up", "w":
+		case "up", "w", "left":
 			if p.cursor > 0 {
 				p.cursor--
 			}
 
 		// Move cursor down
-		case "down", "s":
+		case "down", "s", "right":
 			if p.cursor < len(p.projects)-1 {
 				p.cursor++
 			}
@@ -214,16 +214,17 @@ func (p ProjectPage) View() string {
 	// Adds the navbar and highlights the selected page
 	for i := range p.navBar {
 		if i == 0 {
-			s += styling.NavBarStyle.Foreground(lipgloss.Color("#7D56F4")).Render(p.navBar[i]) + "            "
+			s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render(p.navBar[i]) + "            "
 		} else {
 			s += styling.NavBarStyle.UnsetForeground().UnsetFaint().Render(p.navBar[i])
 		}
 	}
 	// Adds watermark with padding to fit top right of page
 	WMPadding := width - strings.Count(s, "")
-	s += strings.Repeat(" ", WMPadding+5)
-	s += styling.WaterMarkStyle.Render(p.waterMark)
+	s += strings.Repeat(" ", WMPadding) // +5
+	s += styling.WaterMarkStyle.Render(p.waterMark) + "\n\n"
 
+	s += styling.LightBlueStyle.Render(strings.Repeat("━", TerminalWidth-styling.BorderStyle.GetPaddingLeft()))
 	s += "\n\n\n"
 
 	// Adds our listed projects and short descriptions
@@ -235,9 +236,9 @@ func (p ProjectPage) View() string {
 		// Sets cursor to blank if not selected
 		cursor := "  "
 
-		// Sets our cursor to dot if selected
+		// Sets our cursor to a line if selected
 		if p.cursor == i {
-			cursor = "• "
+			cursor = "┃ "
 			styling.SelectedProjectStyle.Foreground(lipgloss.Color("12"))
 		} else {
 			styling.SelectedProjectStyle.Faint(true).Foreground(lipgloss.Color("12"))
@@ -245,12 +246,12 @@ func (p ProjectPage) View() string {
 
 		// Adds the project and description
 		s += styling.SelectedProjectStyle.Render(cursor+p.projects[i]) + "\n"
-		if cursor == "• " {
-			s += styling.SelectedProjectStyle.UnsetFaint().Foreground(lipgloss.Color("#ffffff")).Render("   "+p.summary[i]) + "\n"
-			s += styling.SelectedProjectStyle.UnsetFaint().Foreground(lipgloss.Color("25")).Render("    "+p.links[i]) + "\n\n\n"
+		if cursor == "┃ " {
+			s += styling.Blue.Render(cursor) + styling.SelectedProjectStyle.UnsetFaint().Foreground(lipgloss.Color("#ffffff")).Render("  "+p.summary[i]) + "\n"
+			s += styling.Blue.Render(cursor) + styling.SelectedProjectStyle.UnsetFaint().Foreground(lipgloss.Color("25")).Render("   "+p.links[i]) + "\n\n\n" //25
 		} else {
-			s += styling.SelectedProjectStyle.UnsetForeground().Faint(true).Render("   "+p.summary[i]) + "\n"
-			s += styling.SelectedProjectStyle.Faint(true).Foreground(lipgloss.Color("12")).Render("    "+p.links[i]) + "\n\n\n"
+			s += styling.Blue.Render(cursor) + styling.SelectedProjectStyle.UnsetForeground().Foreground(lipgloss.Color("#ffffff")).Faint(true).Render("  "+p.summary[i]) + "\n"
+			s += styling.Blue.Render(cursor) + styling.SelectedProjectStyle.Faint(true).Foreground(lipgloss.Color("25")).Render("   "+p.links[i]) + "\n\n\n" // 12
 		}
 	}
 
