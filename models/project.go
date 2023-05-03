@@ -23,7 +23,7 @@ type ProjectPage struct {
 	projects, summary, links []string         // An array of strings of our projects and descriptions
 	help                     help.Model       // The help bar at the bottom of the page
 	keys                     helpers.PPkeyMap // Key map for our help model
-	modelWidth, modelHeight  int              // Size of the model (not including help model)
+	minWidth                 int              // Minimum width so model won't break
 }
 
 /*
@@ -39,10 +39,8 @@ type ProjectPage struct {
 // Creates and gives our model values
 func CreateProjectPage() ProjectPage {
 
-	// Sets the navbar values
+	// Sets the navbar and watermark
 	NB := []string{"• Projects", "About"}
-
-	// Sets the watermark
 	WM := " DAB "
 
 	// Sets the cursor to 0
@@ -68,21 +66,20 @@ func CreateProjectPage() ProjectPage {
 
 	// Sets the help model and styling
 	help := help.New()
-	help.Styles.ShortKey = styling.PPHelpBarStyle
-	help.Styles.FullKey = styling.PPHelpBarStyle
+	help.Styles.ShortKey = styling.PPHelpBar
+	help.Styles.FullKey = styling.PPHelpBar
 
 	// Returns our newly created model
 	return ProjectPage{
-		waterMark:  WM,
-		navBar:     NB,
-		cursor:     cursor,
-		projects:   projects,
-		summary:    summary,
-		links:      links,
-		help:       help,
-		keys:       helpers.PPkeys, // Sets our keymap to the project page keys
-		modelWidth: 55,
-		//modelHeight: 24, // Change to actual model height ... 28
+		waterMark: WM,
+		navBar:    NB,
+		cursor:    cursor,
+		projects:  projects,
+		summary:   summary,
+		links:     links,
+		help:      help,
+		keys:      helpers.PPkeys, // Sets our keymap to the project page keys
+		minWidth:  55,
 	}
 }
 
@@ -113,7 +110,7 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 
 		// Sets the help model and main model width for sizing later
-		p.help.Width = msg.Width - styling.HelpBarStyle.GetPaddingLeft()
+		p.help.Width = msg.Width - styling.HelpBar.GetPaddingLeft()
 
 		// Sets terminal width and height
 		TerminalWidth = msg.Width
@@ -134,9 +131,7 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Switches between full help view
 		case "?":
-			if TerminalHeight-p.modelHeight >= 4 {
-				p.help.ShowAll = !p.help.ShowAll
-			}
+			p.help.ShowAll = !p.help.ShowAll
 
 		// Copy link to clipboard
 		case "c":
@@ -185,24 +180,15 @@ ____    ____  __   ___________    __    ____
 // Renders our model formatted to be viewed, then returns as a string
 func (p ProjectPage) View() string {
 
-	// Our s string to build our model
+	// Our string to build our model on
 	var s string
 
-	// Size to return our model later
+	// Logic for setting terminal size to not break model
 	var width, height int
-
-	// Logic for setting terminal width to not break model
-	if TerminalWidth <= p.modelWidth {
-		width = p.modelWidth
+	if TerminalWidth <= p.minWidth {
+		width = p.minWidth
 	} else {
 		width = TerminalWidth
-	}
-
-	// Logic for setting terminal height to not break model
-	if TerminalHeight <= p.modelHeight {
-		height = p.modelHeight
-	} else {
-		height = TerminalHeight
 	}
 
 	// Adds the help bar at the bottom
@@ -214,45 +200,43 @@ func (p ProjectPage) View() string {
 	// Adds the navbar and highlights the selected page
 	for i := range p.navBar {
 		if i == 0 {
-			s += styling.NavBarStyle.Foreground(lipgloss.Color("12")).Render(p.navBar[i]) + "            "
+			s += styling.NavBar.Foreground(lipgloss.Color("12")).Render(p.navBar[i]) + "            "
 		} else {
-			s += styling.NavBarStyle.UnsetForeground().UnsetFaint().Render(p.navBar[i])
+			s += styling.NavBar.UnsetForeground().UnsetFaint().Render(p.navBar[i])
 		}
 	}
 	// Adds watermark with padding to fit top right of page
 	WMPadding := width - strings.Count(s, "")
 	s += strings.Repeat(" ", WMPadding) // +5
-	s += styling.WaterMarkStyle.Render(p.waterMark) + "\n\n"
-
-	s += styling.LightBlueStyle.Render(strings.Repeat("━", TerminalWidth-styling.BorderStyle.GetPaddingLeft()))
+	s += styling.WaterMark.Render(p.waterMark) + "\n\n"
+	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft()))
 	s += "\n\n\n"
 
 	// Adds our listed projects and short descriptions
 	for i := range p.projects {
 
 		// Reset formatting
-		styling.SelectedProjectStyle.UnsetFaint().UnsetForeground()
+		styling.SelectedProject.UnsetFaint().UnsetForeground()
 
-		// Sets cursor to blank if not selected
+		// Sets to a line if select of blank if not
 		cursor := "  "
-
-		// Sets our cursor to a line if selected
 		if p.cursor == i {
 			cursor = "┃ "
-			styling.SelectedProjectStyle.Foreground(lipgloss.Color("12"))
+			styling.SelectedProject.Foreground(lipgloss.Color("12"))
 		} else {
-			styling.SelectedProjectStyle.Faint(true).Foreground(lipgloss.Color("12"))
+			styling.SelectedProject.Faint(true).Foreground(lipgloss.Color("12"))
 		}
 
-		// Adds the project and description
-		s += styling.SelectedProjectStyle.Render(cursor+p.projects[i]) + "\n"
+		// Adds the cursor, project name, summary, and links
+		s += styling.SelectedProject.Render(cursor+p.projects[i]) + "\n"
 		if cursor == "┃ " {
-			s += styling.Blue.Render(cursor) + styling.SelectedProjectStyle.UnsetFaint().Foreground(lipgloss.Color("#ffffff")).Render("  "+p.summary[i]) + "\n"
-			s += styling.Blue.Render(cursor) + styling.SelectedProjectStyle.UnsetFaint().Foreground(lipgloss.Color("25")).Render("   "+p.links[i]) + "\n\n\n" //25
+			s += styling.Blue.Render(cursor) + styling.SelectedProject.UnsetFaint().Foreground(lipgloss.Color("#ffffff")).Render("  "+p.summary[i]) + "\n"
+			s += styling.Blue.Render(cursor) + styling.SelectedProject.UnsetFaint().Foreground(lipgloss.Color("25")).Render("   "+p.links[i]) + "\n\n\n"
 		} else {
-			s += styling.Blue.Render(cursor) + styling.SelectedProjectStyle.UnsetForeground().Foreground(lipgloss.Color("#ffffff")).Faint(true).Render("  "+p.summary[i]) + "\n"
-			s += styling.Blue.Render(cursor) + styling.SelectedProjectStyle.Faint(true).Foreground(lipgloss.Color("25")).Render("   "+p.links[i]) + "\n\n\n" // 12
+			s += styling.Blue.Render(cursor) + styling.SelectedProject.UnsetForeground().Foreground(lipgloss.Color("#ffffff")).Faint(true).Render("  "+p.summary[i]) + "\n"
+			s += styling.Blue.Render(cursor) + styling.SelectedProject.Faint(true).Foreground(lipgloss.Color("25")).Render("   "+p.links[i]) + "\n\n\n"
 		}
+
 	}
 
 	// Puts help model at bottom of terminal with correct styling
@@ -261,8 +245,8 @@ func (p ProjectPage) View() string {
 		emptyLines = 0
 	}
 	s += strings.Repeat("\n", emptyLines)
-	s += styling.HelpBarStyle.Render(fullHelpView)
+	s += styling.HelpBar.Render(fullHelpView)
 
 	// Returns model with final styling
-	return styling.BorderStyle.Width(width).Height(height).Render(s)
+	return styling.Border.Width(width).Height(height).Render(s)
 }
