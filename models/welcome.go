@@ -89,7 +89,7 @@ func CreateWelcomePage() WelcomePage {
 		help:             help.New(),     // Creates a new help model
 		keys:             helpers.WPkeys, // Sets our keymap to the welcome page keymap
 		modelWidth:       52,
-		bigModelHeight:   30,
+		bigModelHeight:   29,
 		smallModelHeight: 14,
 	}
 }
@@ -121,7 +121,7 @@ func (w WelcomePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 
 		// Sets the help model and main model width for sizing later
-		w.help.Width = msg.Width - styling.HelpBarStyle.GetPaddingLeft()
+		w.help.Width = msg.Width - styling.HelpBar.GetPaddingLeft()
 
 		// Sets terminal width and height
 		TerminalWidth = msg.Width
@@ -139,7 +139,7 @@ func (w WelcomePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// If key pressed and not one above, move to next page
 		default:
-			return CreateProjectPage(), cmd
+			return CreateProjectPage(), tea.ClearScreen
 		}
 	}
 
@@ -196,15 +196,15 @@ func (w WelcomePage) View() string {
 	// |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 
 	// Adds the header
-	s += styling.WPHeaderStyle.Render(w.title)
+	s += styling.WPHeader.Render(w.title)
 
 	// Adds watermark with padding to fit top right of page
 	WMPadding := width - strings.Count(s, "")
 	s += strings.Repeat(" ", WMPadding)
-	s += styling.WaterMarkStyle.Render(w.waterMark) + "\n\n"
+	s += styling.WaterMark.Render(w.waterMark) + "\n\n"
 
 	// Adds the pirate picture
-	s += styling.LogoStyle.Render(logo) + "\n\n"
+	s += styling.Logo.Render(logo) + "\n\n"
 
 	// Puts help model at bottom of terminal with correct styling
 	helpHeight := TerminalHeight - strings.Count(s, "\n") - 3
@@ -212,8 +212,8 @@ func (w WelcomePage) View() string {
 		helpHeight = 0
 	}
 	s += strings.Repeat("\n", helpHeight)
-	s += styling.HelpBarStyle.Render(fullHelpView)
+	s += styling.HelpBar.Render(fullHelpView)
 
 	// Returns model with final styling
-	return styling.BorderStyle.Width(width).Height(height).Render(s)
+	return styling.Border.Width(width).Height(height).Render(s)
 }
