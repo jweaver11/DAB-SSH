@@ -89,7 +89,7 @@ func CreateWelcomePage() WelcomePage {
 		help:             help.New(),     // Creates a new help model
 		keys:             helpers.WPkeys, // Sets our keymap to the welcome page keymap
 		modelWidth:       52,
-		bigModelHeight:   29,
+		bigModelHeight:   30,
 		smallModelHeight: 14,
 	}
 }
