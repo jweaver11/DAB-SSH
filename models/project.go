@@ -17,8 +17,8 @@ import (
 )
 
 type ProjectPage struct {
-	waterMark                string           // Watermark in top left corner of page
 	navBar                   []string         // Nav bar below the title
+	waterMark                string           // Watermark in top right corner of page
 	cursor                   int              // Used to track our cursor
 	projects, summary, links []string         // An array of strings of our projects and descriptions
 	help                     help.Model       // The help bar at the bottom of the page
@@ -39,11 +39,11 @@ type ProjectPage struct {
 // Creates and gives our model values
 func CreateProjectPage() ProjectPage {
 
-	// Sets the watermark
-	WM := " DAB "
-
 	// Sets the navbar values
 	NB := []string{"Projects", "About"}
+
+	// Sets the watermark
+	WM := " DAB "
 
 	// Sets the cursor to 0
 	cursor := 0
@@ -73,16 +73,16 @@ func CreateProjectPage() ProjectPage {
 
 	// Returns our newly created model
 	return ProjectPage{
-		waterMark:   WM,
-		navBar:      NB,
-		cursor:      cursor,
-		projects:    projects,
-		summary:     summary,
-		links:       links,
-		help:        help,
-		keys:        helpers.PPkeys, // Sets our keymap to the project page keys
-		modelWidth:  66,             // Change to actual model width
-		modelHeight: 24,             // Change to actual model height ... 28
+		waterMark:  WM,
+		navBar:     NB,
+		cursor:     cursor,
+		projects:   projects,
+		summary:    summary,
+		links:      links,
+		help:       help,
+		keys:       helpers.PPkeys, // Sets our keymap to the project page keys
+		modelWidth: 55,
+		//modelHeight: 24, // Change to actual model height ... 28
 	}
 }
 
@@ -126,8 +126,11 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 
 		// Quits program
-		case "q":
+		case "q", "ctrl+c":
 			return p, tea.Quit
+
+		case "esc":
+			return CreateWelcomePage(), tea.ClearScreen
 
 		// Switches between full help view
 		case "?":
@@ -208,17 +211,18 @@ func (p ProjectPage) View() string {
 	// RENDERING OUR MODEL |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 	// |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 
-	// Adds the watermark
-	s += styling.WaterMarkStyle.Render(p.waterMark) + "\n\n"
-
 	// Adds the navbar and highlights the selected page
 	for i := range p.navBar {
 		if i == 0 {
 			s += styling.NavBarStyle.Foreground(lipgloss.Color("#7D56F4")).Render(p.navBar[i]) + "            "
 		} else {
-			s += styling.NavBarStyle.UnsetForeground().UnsetFaint().Render(p.navBar[i]) + "            "
+			s += styling.NavBarStyle.UnsetForeground().UnsetFaint().Render(p.navBar[i])
 		}
 	}
+	// Adds watermark with padding to fit top right of page
+	WMPadding := width - strings.Count(s, "")
+	s += strings.Repeat(" ", WMPadding+5)
+	s += styling.WaterMarkStyle.Render(p.waterMark)
 
 	s += "\n\n\n"
 
@@ -250,16 +254,12 @@ func (p ProjectPage) View() string {
 		}
 	}
 
-	// Counts empty lines to put help model at bottom of terminal
+	// Puts help model at bottom of terminal with correct styling
 	emptyLines := TerminalHeight - strings.Count(s, "\n") - 3
 	if emptyLines < 0 {
 		emptyLines = 0
 	}
-
-	// Add empty lines if there are any to bottom of terminal
 	s += strings.Repeat("\n", emptyLines)
-
-	// Render help bar in correct styling
 	s += styling.HelpBarStyle.Render(fullHelpView)
 
 	// Returns model with final styling
