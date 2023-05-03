@@ -4,9 +4,9 @@ package styling
 
 import "github.com/charmbracelet/lipgloss"
 
-var WPHeaderStyle = lipgloss.NewStyle().
+var WPHeader = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("12"))
 
-var LogoStyle = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("50")).
+var Logo = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("#13EDFF")). // 50
 	PaddingLeft(4)

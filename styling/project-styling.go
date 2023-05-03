@@ -3,13 +3,13 @@ package styling
 
 import "github.com/charmbracelet/lipgloss"
 
-var SelectedProjectStyle = lipgloss.NewStyle().
+var SelectedProject = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("12"))
 
-var PPHelpBarStyle = lipgloss.NewStyle().
+var PPHelpBar = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("#929693"))
 
-var LightBlueStyle = lipgloss.NewStyle().
+var LightBlue = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("#13EDFF"))
 
 var Blue = lipgloss.NewStyle().

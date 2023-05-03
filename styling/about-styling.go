@@ -4,5 +4,5 @@ package styling
 
 import "github.com/charmbracelet/lipgloss"
 
-var APHelpBarStyle = lipgloss.NewStyle().
+var APHelpBar = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("#929693"))

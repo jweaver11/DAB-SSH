@@ -4,16 +4,16 @@ package styling
 
 import "github.com/charmbracelet/lipgloss"
 
-var WaterMarkStyle = lipgloss.NewStyle().
+var WaterMark = lipgloss.NewStyle().
 	Background(lipgloss.Color("25")).
 	Bold(true)
 
-var NavBarStyle = lipgloss.NewStyle().
+var NavBar = lipgloss.NewStyle().
 	Faint(false)
 
-var HelpBarStyle = lipgloss.NewStyle().
+var HelpBar = lipgloss.NewStyle().
 	PaddingLeft(2)
 
-var BorderStyle = lipgloss.NewStyle().
+var Border = lipgloss.NewStyle().
 	PaddingLeft(2).
 	PaddingTop(1)
