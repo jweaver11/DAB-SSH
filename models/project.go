@@ -9,6 +9,7 @@ import (
 	"DAB-SSH/helpers"
 	"DAB-SSH/styling"
 	"strings"
+	"time"
 
 	"github.com/atotto/clipboard"
 	"github.com/charmbracelet/bubbles/help"
@@ -140,6 +141,14 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if err != nil {
 				panic(err)
 			}
+			str := p.links[p.cursor]
+			p.links[p.cursor] = "copied!"
+
+			go func() {
+				time.AfterFunc(time.Second, func() {
+					p.links[p.cursor] = str // change the string after one second
+				})
+			}()
 
 		// Move cursor up
 		case "up", "w", "left":
