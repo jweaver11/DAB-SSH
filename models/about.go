@@ -38,7 +38,7 @@ type AboutPage struct {
 func CreateAboutPage() AboutPage {
 
 	// Sets the navbar and watermark
-	NB := []string{"Projects", "• About"}
+	NB := []string{"  Projects", "• About"}
 	WM := " DAB "
 
 	// Create Viewport
@@ -177,7 +177,8 @@ func (a AboutPage) View() string {
 	s += "\n\n"
 
 	// Adds viewport
-	s += styling.APViewport.Render(a.viewport.View()) + "\n"
+	s += styling.APViewport.Render(a.viewport.View()) + "\n\n"
+	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft()))
 
 	// Counts empty lines to put help model at bottom of terminal
 	emptyLines := TerminalHeight - strings.Count(s, "\n") - 3

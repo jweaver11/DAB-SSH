@@ -40,7 +40,7 @@ type ProjectPage struct {
 func CreateProjectPage() ProjectPage {
 
 	// Sets the navbar and watermark
-	NB := []string{"• Projects", "About"}
+	NB := []string{"• Projects", "  About"}
 	WM := " DAB "
 
 	// Sets the cursor to 0
@@ -210,7 +210,7 @@ func (p ProjectPage) View() string {
 	s += strings.Repeat(" ", WMPadding) // +5
 	s += styling.WaterMark.Render(p.waterMark) + "\n\n"
 	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft()))
-	s += "\n\n\n"
+	s += "\n\n"
 
 	// Adds our listed projects and short descriptions
 	for i := range p.projects {
@@ -238,6 +238,8 @@ func (p ProjectPage) View() string {
 		}
 
 	}
+	// Adds bottom border line
+	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft()))
 
 	// Puts help model at bottom of terminal with correct styling
 	emptyLines := TerminalHeight - strings.Count(s, "\n") - 3
