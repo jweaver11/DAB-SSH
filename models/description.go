@@ -38,6 +38,7 @@ func CreateDescriptionPage(projectAddress int, projectName string, summary strin
 		projectName: projectName,
 		summary:     summary,
 		description: description,
+		modelHeight: 24,
 	}
 }
 
@@ -76,7 +77,7 @@ func (d DescriptionPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Back to project page
 		case "esc":
-			return CreateProjectPage(), cmd
+			return CreateProjectPage(), tea.ClearScreen
 
 		// Quit the program
 		case "q":
@@ -134,7 +135,7 @@ func (d DescriptionPage) View() string {
 	// Adds the description
 	s += d.description
 
-	return styling.BorderStyle.Width(width).Height(height).Render(s)
+	return styling.Border.Width(width).Height(height).Render(s)
 }
 
 var Descriptions = []string{`Game Overview:
