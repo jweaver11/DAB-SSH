@@ -26,7 +26,7 @@ type AboutPage struct {
 }
 
 // The about page DAB body
-var AboutContent, _ = os.ReadFile("content/about.md")
+var AboutContent, _ = os.ReadFile("content/aboutpage/about.md")
 
 /*
   ______ .______       _______     ___   .___________. _______     .___  ___.   ______    _______   _______  __
@@ -115,7 +115,7 @@ func (a AboutPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return a, tea.Quit
 
 		// Switches back to project page
-		case "tab":
+		case "tab", "esc":
 			return CreateProjectPage(), tea.ClearScreen
 
 		// Switches between full help view
