@@ -1,4 +1,4 @@
-## Mission:                                                              
+### Mission:                                                              
                                                                          
 Digital Art Brokers (DAB) is a blockchain and NFT 
 gamification company dedicated to creating unique 
@@ -29,7 +29,7 @@ with DAV is an example of DAB's mission to do great while doing great.
 Players can enjoy a fun and competitive gaming experience while 
 contributing to a worthy cause.                                          
 
-## Partnership with DAV:
+### Partnership with DAV:
 
 Disabled American Veterans (DAV) empowers veterans to lead high-quality 
 lives with respect and dignity. It is dedicated to a single purpose: 
