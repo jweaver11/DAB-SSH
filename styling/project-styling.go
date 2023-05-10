@@ -8,9 +8,3 @@ var SelectedProject = lipgloss.NewStyle().
 
 var PPHelpBar = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("#929693"))
-
-var LightBlue = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("#13EDFF"))
-
-var Blue = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("12"))

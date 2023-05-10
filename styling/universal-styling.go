@@ -17,3 +17,9 @@ var HelpBar = lipgloss.NewStyle().
 var Border = lipgloss.NewStyle().
 	PaddingLeft(2).
 	PaddingTop(1)
+
+var LightBlue = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("#13EDFF"))
+
+var Blue = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("12"))
