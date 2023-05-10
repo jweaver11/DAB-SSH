@@ -13,7 +13,7 @@ import (
 )
 
 type DescriptionPage struct {
-	//dabTitle    string           // DAB written at top of page
+	dabViewport viewport.Model   // Needed for DAB at top of page
 	projectName string           // project name
 	viewport    viewport.Model   // Viewport for scrolling - sets content upon creation
 	help        help.Model       // Help bar at bottom of page
@@ -22,7 +22,7 @@ type DescriptionPage struct {
 }
 
 // The about page DAB body
-// var DABTitle, _ = os.ReadFile("content/DAB.md")
+var DABTitle, _ = os.ReadFile("content/DAB.md")
 var BotBTitle, _ = os.ReadFile("content/descriptionpage/BotBTitle.md")
 var BotBContent, _ = os.ReadFile("content/descriptionpage/BotB.md")
 
@@ -42,6 +42,9 @@ func CreateDescriptionPage(projectAddress int, projectName string) DescriptionPa
 	// Renders content seperately from titles
 	renderedContent, _ := glamour.Render(string(BotBContent), "dracula")
 
+	dabViewport := viewport.New(TerminalWidth-styling.Border.GetPaddingLeft(), 5)
+	dabViewport.SetContent(string(DABTitle))
+
 	// Create Viewport and sets content
 	viewport := viewport.New(TerminalWidth-styling.Border.GetPaddingLeft(), TerminalHeight-15)
 	viewport.SetContent(string(BotBTitle) + renderedContent)
@@ -53,7 +56,7 @@ func CreateDescriptionPage(projectAddress int, projectName string) DescriptionPa
 
 	// Return our created model
 	return DescriptionPage{
-		//dabTitle:    string(DABTitle),
+		dabViewport: dabViewport,
 		projectName: projectName,
 		viewport:    viewport,
 		help:        help,
@@ -159,8 +162,7 @@ func (d DescriptionPage) View() string {
 	// |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 
 	// Adds DAB title
-	//width = 0
-	//s += d.dabTitle + "\n" // -- if Width != 0 then breaks shit
+	s += d.dabViewport.View()
 
 	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft()))
 	s += "\n\n"
@@ -170,7 +172,7 @@ func (d DescriptionPage) View() string {
 	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft()))
 
 	// Counts empty lines to put help model at bottom of terminal
-	emptyLines := TerminalHeight - strings.Count(s, "\n") - 3
+	emptyLines := TerminalHeight - strings.Count(s, "\n") - 4
 	if emptyLines < 0 {
 		emptyLines = 0
 	}
