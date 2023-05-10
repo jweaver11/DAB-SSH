@@ -1,4 +1,3 @@
-
 BREAKDOWN OF MONEY DAV GETS
 
 | Where             | % to DAV | 
