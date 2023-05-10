@@ -247,15 +247,14 @@ func (p ProjectPage) View() string {
 		}
 
 	}
-	// Adds bottom border line
-	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft()))
 
 	// Puts help model at bottom of terminal with correct styling
-	emptyLines := TerminalHeight - strings.Count(s, "\n") - 3
+	emptyLines := TerminalHeight - strings.Count(s, "\n") - 5
 	if emptyLines < 0 {
 		emptyLines = 0
 	}
 	s += strings.Repeat("\n", emptyLines)
+	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft())) + "\n\n"
 	s += styling.HelpBar.Render(fullHelpView)
 
 	// Returns model with final styling
