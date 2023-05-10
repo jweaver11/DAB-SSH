@@ -1,21 +1,30 @@
 package models
 
 import (
+	"DAB-SSH/helpers"
 	"DAB-SSH/styling"
+	"os"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
+	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/glamour"
 )
 
-//const useHighPerformanceRenderer = false
-
 type DescriptionPage struct {
-	projectName             string     // Watermark in top left corner of page
-	summary                 string     // Short summary of project at top of page
-	description             string     // Actual description of the project
-	help                    help.Model // Help bar at bottom of page
-	modelWidth, modelHeight int        // Size of the model (not including help model)
+	//dabTitle    string           // DAB written at top of page
+	projectName string           // project name
+	viewport    viewport.Model   // Viewport for scrolling - sets content upon creation
+	help        help.Model       // Help bar at bottom of page
+	keys        helpers.PPkeyMap // Key map for our help model
+	minWidth    int              // Minimum Width so model won't break
 }
+
+// The about page DAB body
+// var DABTitle, _ = os.ReadFile("content/DAB.md")
+var BotBTitle, _ = os.ReadFile("content/descriptionpage/BotBTitle.md")
+var BotBContent, _ = os.ReadFile("content/descriptionpage/BotB.md")
 
 /*
   ______ .______       _______     ___   .___________. _______     .___  ___.   ______    _______   _______  __
@@ -28,17 +37,28 @@ type DescriptionPage struct {
 */
 
 // Creates and gives our model values
-func CreateDescriptionPage(projectAddress int, projectName string, summary string) DescriptionPage {
+func CreateDescriptionPage(projectAddress int, projectName string) DescriptionPage {
 
-	// Sets the description passed through
-	description := Descriptions[projectAddress]
+	// Renders content seperately from titles
+	renderedContent, _ := glamour.Render(string(BotBContent), "dracula")
+
+	// Create Viewport and sets content
+	viewport := viewport.New(TerminalWidth-styling.Border.GetPaddingLeft(), TerminalHeight-15)
+	viewport.SetContent(string(BotBTitle) + renderedContent)
+
+	// Sets the help model and styling
+	help := help.New()
+	help.Styles.ShortKey = styling.APHelpBar
+	help.Styles.FullKey = styling.APHelpBar
 
 	// Return our created model
 	return DescriptionPage{
+		//dabTitle:    string(DABTitle),
 		projectName: projectName,
-		summary:     summary,
-		description: description,
-		modelHeight: 24,
+		viewport:    viewport,
+		help:        help,
+		keys:        helpers.APkeys, // Change later
+		minWidth:    85,             // Change later 65
 	}
 }
 
@@ -59,16 +79,26 @@ func (d DescriptionPage) Init() tea.Cmd {
 func (d DescriptionPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	// Sets cmd as a tea command that can be easily changed later
-	var cmd tea.Cmd
+	var (
+		cmd  tea.Cmd
+		cmds []tea.Cmd
+	)
 
 	// Sets msg as a switch for all events
 	switch msg := msg.(type) {
 
 	// Runs whenever the window is resized or first loaded
 	case tea.WindowSizeMsg:
+		// Sets the help model and main model width for sizing later
+		d.help.Width = msg.Width - styling.HelpBar.GetPaddingLeft()
+
+		// Sets terminal width and height
 		TerminalWidth = msg.Width
 		TerminalHeight = msg.Height
 
+		// Viewport Size
+		d.viewport.Width = msg.Width - styling.Border.GetPaddingLeft()
+		d.viewport.Height = msg.Height - 15
 	// All key presses
 	case tea.KeyMsg:
 
@@ -82,10 +112,18 @@ func (d DescriptionPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Quit the program
 		case "q":
 			return d, tea.Quit
+
+			// Switches between full help view
+		case "?":
+			d.help.ShowAll = !d.help.ShowAll
+
 		}
 	}
+	// Handle keyboard and mouse events in the viewport
+	d.viewport, cmd = d.viewport.Update(msg)
+	cmds = append(cmds, cmd)
 
-	return d, cmd
+	return d, tea.Batch(cmds...)
 }
 
 /*
@@ -106,62 +144,42 @@ func (d DescriptionPage) View() string {
 	// Size to return our model later
 	var width, height int
 
-	// Logic for setting terminal width to not break model
-	if TerminalWidth <= d.modelWidth {
-		width = d.modelWidth
+	// Logic for setting terminal size to not break model
+	if TerminalWidth <= d.minWidth {
+		width = d.minWidth
 	} else {
 		width = TerminalWidth
 	}
+	height = TerminalHeight
 
-	// Logic for setting terminal height to not break model
-	if TerminalHeight <= d.modelHeight {
-		height = d.modelHeight
-	} else {
-		height = TerminalHeight
-	}
+	// Adds the help bar at the bottom
+	fullHelpView := d.help.View(d.keys)
 
 	// RENDERING OUR MODEL |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 	// |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 
-	// Addds the watermark
-	s += d.projectName + "\n\n"
+	// Adds DAB title
+	//width = 0
+	//s += d.dabTitle + "\n" // -- if Width != 0 then breaks shit
 
-	// Add the summary
-	s += d.summary
+	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft()))
+	s += "\n\n"
 
-	// Adds spacing
-	s += "\n\n\n"
+	// Adds viewport and lower blue border
+	s += styling.DPViewport.Render(d.viewport.View()) + "\n\n"
+	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft()))
 
-	// Adds the description
-	s += d.description
+	// Counts empty lines to put help model at bottom of terminal
+	emptyLines := TerminalHeight - strings.Count(s, "\n") - 3
+	if emptyLines < 0 {
+		emptyLines = 0
+	}
+
+	// Add empty lines if there are any to bottom of terminal
+	s += strings.Repeat("\n", emptyLines)
+
+	// Render help bar in correct styling
+	s += styling.HelpBar.Render(fullHelpView)
 
 	return styling.Border.Width(width).Height(height).Render(s)
 }
-
-var Descriptions = []string{`Game Overview:
-BotB is a battle-card strategy game that combines choice-driven narrative features and programmed
-charitable impact. All in-game transactions are visible throughout the two-week experience,
-ensuring complete transparency for the players. The game's smart contracts guarantee a higher
-reward, unique to the NFT space: programmatically-assured charitable impact. Winning gamers will
-have the option to share their "spoils" with DAV for further impact.
-Charitable giving on the blockchain offers the promise of complete transparency. DAB has
-guaranteed that promise by disallowing human intervention in BotB's contract-cemented code. The
-game's strict parameters and automated controls circumvent "trust-based" agreements, which are
-vulnerable to human error, greed, or changeability. BotB self-monitors by way of a system built on
-total transparency.
-BotB's core objective is to do great while doing great. It challenges the existing NFT gaming
-community, the crypto-curious, and even the most skeptical crypto critics to get involved. Players
-will be empowered, entertained, and educated while supporting a truly deserving cause.
-	
-	Gameplay:
-In BotB, "Cards" or “player game pieces” are NFTs, and their value appreciates the more the game is
-played. Buccaneers in BotB have three categories of stats: physical, mental, and spiritual, and belong
-to one of three classes (human, cyborg, and robot), each starting out with the same stats for the 1st
-iteration. Battles are initiated by any player at any time. The game also features a defense mode that
-grants players an increased chance of winning if they are attacked.
-Interactive elements and battle outcomes are determined by the game's programming and informed
-by player choices. All actions carry a small cost, and the game continuously distributes these
-amounts to its main three pools: DAV, the treasure chest (prize), and DAB (BotB's team).`,
-	"coconuts",
-	"rule",
-	"yo"}
