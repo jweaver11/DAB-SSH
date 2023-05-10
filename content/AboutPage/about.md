@@ -1,38 +1,32 @@
- ___  _      _ _        _      _       _      ___         _              
-|   \(_)__ _(_) |_ __ _| |    /_\  _ _| |_   | _ )_ _ ___| |_____ _ _ ___
-| |) | / _` | |  _/ _` | |   / _ \| '_|  _|  | _ \ '_/ _ \ / / -_) '_(_-<
-|___/|_\__, |_|\__\__,_|_|  /_/ \_\_|  \__|  |___/_| \___/_\_\___|_| /__/
-       |___/         
-
 ## Mission:                                                              
                                                                          
-Digital Art Brokers (DAB) is a blockchain and NFT                        
-gamification company dedicated to creating unique                        
-gaming experiences while giving back through                             
+Digital Art Brokers (DAB) is a blockchain and NFT 
+gamification company dedicated to creating unique 
+gaming experiences while giving back through 
 charitable partnerships.                                                 
                                                                          
 Buccaneers of the Blockchain (BotB) is DAB's first project,              
 created in partnership with the national nonprofit                       
-organization DAV (Disabled American Veterans).                           
-BotB is a crypto-based game that allows players to learn                 
-the basics of blockchain gaming and engage in a transparent              
-support system for disabled veterans – all while competing               
-to earn real money. BotB is the first piece of a larger project          
-aiming to illustrate DAB’s gamified model of service that re-imagines    
+organization DAV (Disabled American Veterans). 
+BotB is a crypto-based game that allows players to learn 
+the basics of blockchain gaming and engage in a transparent 
+support system for disabled veterans – all while competing 
+to earn real money. BotB is the first piece of a larger project 
+aiming to illustrate DAB’s gamified model of service that re-imagines 
 the donor/recipient relationship.                                        
                                                                          
-DAB has plans to offer a host of experiences to offer                    
-another space where community-building and Web3 experience(s)            
-can expand. DAB is committed to transparency, charitable impact,         
-and providing unique gaming experiences. DAB’s ultimate objective        
-is to utilize Web3, NFTs, and blockchain-based technologies              
+DAB has plans to offer a host of experiences to offer 
+another space where community-building and Web3 experience(s) 
+can expand. DAB is committed to transparency, charitable impact, 
+and providing unique gaming experiences. DAB’s ultimate objective 
+is to utilize Web3, NFTs, and blockchain-based technologies 
 to provide community value and initiate participation.                   
                                                                          
-Achievement of this will be satisfied by coding service into its tech,   
-re-imagining “traditional” models of charitable giving, and              
-re-conceptualizing the donor/recipient paradigm. BotB's partnership      
-with DAV is an example of DAB's mission to do great while doing great.   
-Players can enjoy a fun and competitive gaming experience while          
+Achievement of this will be satisfied by coding service into its tech, 
+re-imagining “traditional” models of charitable giving, and 
+re-conceptualizing the donor/recipient paradigm. BotB's partnership 
+with DAV is an example of DAB's mission to do great while doing great. 
+Players can enjoy a fun and competitive gaming experience while 
 contributing to a worthy cause.                                          
 
 ## Partnership with DAV:
