@@ -12,20 +12,21 @@ import (
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
 )
 
 type AboutPage struct {
 	waterMark string           // Watermark in top left corner of page
 	navBar    []string         // Nav bar below the title
-	content   string           // The text to describe DAB
-	viewport  viewport.Model   // Viewport for scrolling
+	viewport  viewport.Model   // Viewport for scrolling - sets content upon creation
 	help      help.Model       // The help bar at the bottom of the page
 	keys      helpers.PPkeyMap // Key map for our help model
 	minWidth  int              // Minimum Width so model won't break
 }
 
 // The about page DAB body
+var AboutTitle, _ = os.ReadFile("content/aboutpage/aboutTitle.md")
 var AboutContent, _ = os.ReadFile("content/aboutpage/about.md")
 
 /*
@@ -45,9 +46,11 @@ func CreateAboutPage() AboutPage {
 	NB := []string{"  Projects", "• About"}
 	WM := " DAB "
 
+	renderedContent, _ := glamour.Render(string(AboutContent), "dracula") // Dark doesnt work, messes up formatting
+
 	// Create Viewport and sets content
-	viewport := viewport.New(TerminalWidth, TerminalHeight-10)
-	viewport.SetContent(string(AboutContent))
+	viewport := viewport.New(TerminalWidth-styling.Border.GetPaddingLeft(), TerminalHeight-10)
+	viewport.SetContent(string(AboutTitle) + renderedContent)
 
 	// Sets the help model and styling
 	help := help.New()
