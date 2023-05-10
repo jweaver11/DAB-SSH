@@ -46,7 +46,8 @@ func CreateAboutPage() AboutPage {
 	NB := []string{"  Projects", "• About"}
 	WM := " DAB "
 
-	renderedContent, _ := glamour.Render(string(AboutContent), "dracula") // Dark doesnt work, messes up formatting
+	// Renders content seperately from titles
+	renderedContent, _ := glamour.Render(string(AboutContent), "dracula")
 
 	// Create Viewport and sets content
 	viewport := viewport.New(TerminalWidth-styling.Border.GetPaddingLeft(), TerminalHeight-10)
@@ -59,12 +60,12 @@ func CreateAboutPage() AboutPage {
 
 	// Returns our created model
 	return AboutPage{
-		waterMark: WM,
 		navBar:    NB,
+		waterMark: WM,
 		viewport:  viewport,
 		help:      help,
 		keys:      helpers.APkeys, // Sets our keymap to the about page keys
-		minWidth:  45,             // Change to actual model width
+		minWidth:  85,             // Change to actual model width
 	}
 }
 
