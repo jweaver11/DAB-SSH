@@ -168,7 +168,7 @@ func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Returns description page of selected project
 		case "enter":
-			return CreateDescriptionPage(p.cursor, p.projects[p.cursor], p.summary[p.cursor]), tea.ClearScreen
+			return CreateDescriptionPage(p.cursor, p.projects[p.cursor]), tea.ClearScreen
 		}
 
 	}
