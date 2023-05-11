@@ -1,7 +1,5 @@
 /* Controls the project page model, which is the page that
-shows users the projects DAB is working on. The model contains the watermark
-and navbar, a cursor to point at the projects, the projects and short description
-of them, and a help model at bottom of page */
+shows users the projects DAB is working on.  */
 
 package models
 
@@ -17,6 +15,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+// Model for the page
 type ProjectPage struct {
 	navBar                   []string         // Nav bar below the title
 	waterMark                string           // Watermark in top right corner of page
@@ -216,7 +215,7 @@ func (p ProjectPage) View() string {
 	}
 	// Adds watermark with padding to fit top right of page
 	WMPadding := width - strings.Count(s, "")
-	s += strings.Repeat(" ", WMPadding) // +5
+	s += strings.Repeat(" ", WMPadding)
 	s += styling.WaterMark.Render(p.waterMark) + "\n\n"
 	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft()))
 	s += "\n\n"
