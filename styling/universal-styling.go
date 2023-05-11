@@ -23,3 +23,6 @@ var LightBlue = lipgloss.NewStyle().
 
 var Blue = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("12"))
+
+var White = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("#ffffff"))
