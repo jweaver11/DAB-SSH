@@ -13,11 +13,12 @@ import (
 )
 
 type DescriptionPage struct {
-	dabViewport viewport.Model   // Needed for DAB at top of page
 	projectName string           // project name
+	waterMark   string           // DAB watermark for top right corner
+	summary     string           // Short description of project
 	viewport    viewport.Model   // Viewport for scrolling - sets content upon creation
 	help        help.Model       // Help bar at bottom of page
-	keys        helpers.PPkeyMap // Key map for our help model
+	keys        helpers.DPkeyMap // Key map for our help model
 	minWidth    int              // Minimum Width so model won't break
 }
 
@@ -39,6 +40,10 @@ var BotBContent, _ = os.ReadFile("content/descriptionpage/BotB.md")
 // Creates and gives our model values
 func CreateDescriptionPage(projectAddress int, projectName string) DescriptionPage {
 
+	// Sets watermark and summary
+	WM := " DAB "
+	summary := "deez"
+
 	// Renders content seperately from titles
 	renderedContent, _ := glamour.Render(string(BotBContent), "dracula")
 
@@ -46,7 +51,7 @@ func CreateDescriptionPage(projectAddress int, projectName string) DescriptionPa
 	dabViewport.SetContent(string(DABTitle))
 
 	// Create Viewport and sets content
-	viewport := viewport.New(TerminalWidth-styling.Border.GetPaddingLeft(), TerminalHeight-15)
+	viewport := viewport.New(TerminalWidth-styling.Border.GetPaddingLeft(), TerminalHeight-10)
 	viewport.SetContent(string(BotBTitle) + renderedContent)
 
 	// Sets the help model and styling
@@ -56,12 +61,13 @@ func CreateDescriptionPage(projectAddress int, projectName string) DescriptionPa
 
 	// Return our created model
 	return DescriptionPage{
-		dabViewport: dabViewport,
 		projectName: projectName,
+		waterMark:   WM,
+		summary:     summary,
 		viewport:    viewport,
 		help:        help,
-		keys:        helpers.APkeys, // Change later
-		minWidth:    85,             // Change later 65
+		keys:        helpers.DPkeys,
+		minWidth:    85, // Change later 65
 	}
 }
 
@@ -101,7 +107,7 @@ func (d DescriptionPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Viewport Size
 		d.viewport.Width = msg.Width - styling.Border.GetPaddingLeft()
-		d.viewport.Height = msg.Height - 15
+		d.viewport.Height = msg.Height - 10
 	// All key presses
 	case tea.KeyMsg:
 
@@ -109,16 +115,16 @@ func (d DescriptionPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 
 		// Back to project page
-		case "esc":
+		case "esc", "q":
 			return CreateProjectPage(), tea.ClearScreen
 
-		// Quit the program
-		case "q":
-			return d, tea.Quit
+		// Scroll up
+		case "w":
+			d.viewport.LineUp(1)
 
-			// Switches between full help view
-		case "?":
-			d.help.ShowAll = !d.help.ShowAll
+		// Scroll down
+		case "s":
+			d.viewport.LineDown(1)
 
 		}
 	}
@@ -161,26 +167,26 @@ func (d DescriptionPage) View() string {
 	// RENDERING OUR MODEL |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 	// |*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|*|
 
-	// Adds DAB title
-	s += d.dabViewport.View()
+	// Adds project name, watermark, and short summary
+	s += styling.Blue.Render(d.projectName)
+	WMPadding := width - strings.Count(s, "")
+	s += strings.Repeat(" ", WMPadding)
+	s += styling.WaterMark.Render(d.waterMark) + "\n"
+	s += styling.White.Faint(true).Render(d.summary) + "\n"
 
 	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft()))
 	s += "\n\n"
 
 	// Adds viewport and lower blue border
 	s += styling.DPViewport.Render(d.viewport.View()) + "\n\n"
-	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft()))
 
 	// Counts empty lines to put help model at bottom of terminal
-	emptyLines := TerminalHeight - strings.Count(s, "\n") - 4
+	emptyLines := TerminalHeight - strings.Count(s, "\n") - 5
 	if emptyLines < 0 {
 		emptyLines = 0
 	}
-
-	// Add empty lines if there are any to bottom of terminal
 	s += strings.Repeat("\n", emptyLines)
-
-	// Render help bar in correct styling
+	s += styling.LightBlue.Render(strings.Repeat("━", TerminalWidth-styling.Border.GetPaddingLeft())) + "\n\n"
 	s += styling.HelpBar.Render(fullHelpView)
 
 	return styling.Border.Width(width).Height(height).Render(s)
