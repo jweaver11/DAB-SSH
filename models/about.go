@@ -122,9 +122,11 @@ func (a AboutPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "tab", "esc":
 			return CreateProjectPage(), tea.ClearScreen
 
+		// Scroll up
 		case "w":
 			a.viewport.LineUp(1)
 
+		// Scroll down
 		case "s":
 			a.viewport.LineDown(1)
 
