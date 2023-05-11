@@ -22,8 +22,7 @@ type DescriptionPage struct {
 	minWidth    int              // Minimum Width so model won't break
 }
 
-// The about page DAB body
-var DABTitle, _ = os.ReadFile("content/DAB.md")
+// The body for dif projects
 var BotBTitle, _ = os.ReadFile("content/descriptionpage/BotBTitle.md")
 var BotBContent, _ = os.ReadFile("content/descriptionpage/BotB.md")
 
@@ -42,13 +41,33 @@ func CreateDescriptionPage(projectAddress int, projectName string) DescriptionPa
 
 	// Sets watermark and summary
 	WM := " DAB "
-	summary := "deez"
 
 	// Renders content seperately from titles
-	renderedContent, _ := glamour.Render(string(BotBContent), "dracula")
+	var summary string
+	var renderedContent string
 
-	dabViewport := viewport.New(TerminalWidth-styling.Border.GetPaddingLeft(), 5)
-	dabViewport.SetContent(string(DABTitle))
+	switch projectAddress {
+	case 0:
+		summary = "juan"
+		RC, _ := glamour.Render(string(BotBContent), "dracula")
+		renderedContent = RC
+
+	case 1:
+		summary = "tooth"
+		RC, _ := glamour.Render(string(BotBContent), "dracula")
+		renderedContent = RC
+
+	case 2:
+		summary = "turd"
+		RC, _ := glamour.Render(string(BotBContent), "dracula")
+		renderedContent = RC
+
+	case 3:
+		summary = "forf"
+		RC, _ := glamour.Render(string(BotBContent), "dracula")
+		renderedContent = RC
+
+	}
 
 	// Create Viewport and sets content
 	viewport := viewport.New(TerminalWidth-styling.Border.GetPaddingLeft(), TerminalHeight-10)
