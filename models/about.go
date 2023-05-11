@@ -21,7 +21,7 @@ type AboutPage struct {
 	navBar    []string         // Nav bar below the title
 	viewport  viewport.Model   // Viewport for scrolling - sets content upon creation
 	help      help.Model       // The help bar at the bottom of the page
-	keys      helpers.PPkeyMap // Key map for our help model
+	keys      helpers.APkeyMap // Key map for our help model
 	minWidth  int              // Minimum Width so model won't break
 }
 
@@ -122,9 +122,11 @@ func (a AboutPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "tab", "esc":
 			return CreateProjectPage(), tea.ClearScreen
 
-		// Switches between full help view
-		case "?":
-			a.help.ShowAll = !a.help.ShowAll
+		case "w":
+			a.viewport.LineUp(1)
+
+		case "s":
+			a.viewport.LineDown(1)
 
 		}
 

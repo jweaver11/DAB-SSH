@@ -29,9 +29,9 @@ func (k PPkeyMap) ShortHelp() []key.Binding {
 // It is part of the key.Map interface
 func (k PPkeyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.Tab, k.Enter},     // First collumn
-		{k.Help, k.Quit},     // Second collumn
-		{k.Navigate, k.Copy}, // Third collumn
+		{k.Tab, k.Copy},       // First collumn
+		{k.Enter, k.Navigate}, // Second collumn
+		{k.Help, k.Quit},      // Third collumn
 	}
 }
 
