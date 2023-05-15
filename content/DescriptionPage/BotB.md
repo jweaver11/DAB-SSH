@@ -1,21 +1,28 @@
-BREAKDOWN OF MONEY DAV GETS
-
-| Where             | % to DAV | 
-| ----------------- | -------- |
-| Mint              |    25    |
-| In-Game Purchases |    40    | 
 
 Game Overview:
-BotB is a battle-card strategy game that combines choice-driven narrative features and programmed
-charitable impact. All in-game transactions are visible throughout the two-week experience,
-ensuring complete transparency for the players. The game's smart contracts guarantee a higher
-reward, unique to the NFT space: programmatically-assured charitable impact. Winning gamers will
+BotB is a battle-card strategy game that combines choice-driven 
+narrative features and programmed charitable impact. All in-game 
+transactions are visible throughout the two-week experience,
+ensuring complete transparency for the players. The game's smart 
+contracts guarantee a higher reward, unique to the NFT space: 
+programmatically-assured charitable impact. Winning gamers will
 have the option to share their "spoils" with DAV for further impact.
-Charitable giving on the blockchain offers the promise of complete transparency. DAB has
-guaranteed that promise by disallowing human intervention in BotB's contract-cemented code. The
-game's strict parameters and automated controls circumvent "trust-based" agreements, which are
-vulnerable to human error, greed, or changeability. BotB self-monitors by way of a system built on
-total transparency.
+Charitable giving on the blockchain offers the promise of complete transparency. 
+DAB has guaranteed that promise by disallowing human intervention in 
+BotB's contract-cemented code. The game's strict parameters and automated 
+controls circumvent "trust-based" agreements, which are vulnerable 
+to human error, greed, or changeability. BotB self-monitors by way 
+of a system built on total transparency.
+
+
+    * BREAKDOWN OF MONEY DAV GETS *
+
+    | Where             | % to DAV | 
+    | ----------------- | -------- |
+    | Mint              |    25    |
+    | In-Game Purchases |    40    | 
+    
+
 BotB's core objective is to do great while doing great. It challenges the existing NFT gaming
 community, the crypto-curious, and even the most skeptical crypto critics to get involved. Players
 will be empowered, entertained, and educated while supporting a truly deserving cause.

@@ -18,6 +18,7 @@ import (
 type DescriptionPage struct {
 	projectName string           // project name
 	waterMark   string           // DAB watermark for top right corner
+	title       string           // Project name in viewport
 	summary     string           // Short description of project
 	viewport    viewport.Model   // Viewport for scrolling - sets content upon creation
 	help        help.Model       // Help bar at bottom of page
@@ -25,9 +26,21 @@ type DescriptionPage struct {
 	minWidth    int              // Minimum Width so model won't break
 }
 
-// The body for dif projects
+// Buccaneers title and content for viewport
 var BotBTitle, _ = os.ReadFile("content/descriptionpage/BotBTitle.md")
 var BotBContent, _ = os.ReadFile("content/descriptionpage/BotB.md")
+
+// SSH
+var SSHTitle, _ = os.ReadFile("content/descriptionpage/SSHTitle.md")
+var SSHContent, _ = os.ReadFile("")
+
+// Discord
+var DiscordTitle, _ = os.ReadFile("content/descriptionpage/DiscordTitle.md")
+var DiscordContent, _ = os.ReadFile("")
+
+// AI
+var AITitle, _ = os.ReadFile("content/descriptionpage/AITitle.md")
+var AIContent, _ = os.ReadFile("")
 
 /*
   ______ .______       _______     ___   .___________. _______     .___  ___.   ______    _______   _______  __
@@ -46,30 +59,36 @@ func CreateDescriptionPage(projectAddress int, projectName string, summary strin
 	WM := " DAB "
 
 	// Renders content seperately from titles
+	var title string
 	var renderedContent string
 
+	// Logic that sets title and description to selected project project
 	switch projectAddress {
 	case 0:
+		title = string(BotBTitle)
 		RC, _ := glamour.Render(string(BotBContent), "dracula")
 		renderedContent = RC
 
 	case 1:
-		RC, _ := glamour.Render(string(BotBContent), "dracula")
+		title = string(SSHTitle)
+		RC, _ := glamour.Render(string(SSHContent), "dracula")
 		renderedContent = RC
 
 	case 2:
-		RC, _ := glamour.Render(string(BotBContent), "dracula")
+		title = string(DiscordTitle)
+		RC, _ := glamour.Render(string(DiscordContent), "dracula")
 		renderedContent = RC
 
 	case 3:
-		RC, _ := glamour.Render(string(BotBContent), "dracula")
+		title = string(AITitle)
+		RC, _ := glamour.Render(string(AIContent), "dracula")
 		renderedContent = RC
 
 	}
 
-	// Create Viewport and sets content
+	// Create Viewport and sets title and content
 	viewport := viewport.New(TerminalWidth-styling.Border.GetPaddingLeft(), TerminalHeight-10)
-	viewport.SetContent(string(BotBTitle) + renderedContent)
+	viewport.SetContent(title + renderedContent)
 
 	// Sets the help model and styling
 	help := help.New()
