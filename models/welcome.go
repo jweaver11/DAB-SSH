@@ -1,7 +1,5 @@
 /* Controls the welcome page model, which is the page that
-users first see when they connect to the SSH server. The model contains the
-title of Digital Art Brokers, a navigation bar between the models, and a help bar
-at the bottom of the page*/
+users first see when they connect to the SSH server. */
 
 package models
 
@@ -108,6 +106,7 @@ func (w WelcomePage) Init() tea.Cmd {
 |  `--'  | |  |      |  '--'  | /  _____  \   |  |     |  |____
  \______/  | _|      |_______/ /__/     \__\  |__|     |_______|
 */
+
 // Updates our model everytime a key event happens, mainly window resizes and key presses
 func (w WelcomePage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 

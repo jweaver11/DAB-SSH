@@ -97,6 +97,7 @@ func (p ProjectPage) Init() tea.Cmd {
 |  `--'  | |  |      |  '--'  | /  _____  \   |  |     |  |____
  \______/  | _|      |_______/ /__/     \__\  |__|     |_______|
 */
+
 // Updates our model everytime a key event happens, mainly window resizes and key presses
 func (p ProjectPage) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 

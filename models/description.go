@@ -1,3 +1,6 @@
+/* Controls the Description page model, which is the page that
+shows users the selected project in more detail  */
+
 package models
 
 import (
