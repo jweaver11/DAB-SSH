@@ -37,33 +37,28 @@ var BotBContent, _ = os.ReadFile("content/descriptionpage/BotB.md")
 */
 
 // Creates and gives our model values
-func CreateDescriptionPage(projectAddress int, projectName string) DescriptionPage {
+func CreateDescriptionPage(projectAddress int, projectName string, summary string) DescriptionPage {
 
 	// Sets watermark and summary
 	WM := " DAB "
 
 	// Renders content seperately from titles
-	var summary string
 	var renderedContent string
 
 	switch projectAddress {
 	case 0:
-		summary = "juan"
 		RC, _ := glamour.Render(string(BotBContent), "dracula")
 		renderedContent = RC
 
 	case 1:
-		summary = "tooth"
 		RC, _ := glamour.Render(string(BotBContent), "dracula")
 		renderedContent = RC
 
 	case 2:
-		summary = "turd"
 		RC, _ := glamour.Render(string(BotBContent), "dracula")
 		renderedContent = RC
 
 	case 3:
-		summary = "forf"
 		RC, _ := glamour.Render(string(BotBContent), "dracula")
 		renderedContent = RC
 
