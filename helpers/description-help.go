@@ -34,7 +34,7 @@ func (d DPkeyMap) FullHelp() [][]key.Binding {
 var DPkeys = DPkeyMap{
 	Back: key.NewBinding(
 		key.WithKeys("q"),
-		key.WithHelp("q", "quit"),
+		key.WithHelp("q", "back"),
 	),
 	Scroll: key.NewBinding(
 		key.WithKeys("↑↓/ws"),
