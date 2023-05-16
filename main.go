@@ -65,13 +65,18 @@ func main() {
 // You can wire any Bubble Tea model up to the middleware with a function that
 // handles the incoming ssh.Session.
 func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
+
+	// Starts ssh session
 	_, _, active := s.Pty()
 	if !active {
-		wish.Fatalln(s, "Could not start ssh session") // Error if ssh session doesnt start
+		wish.Fatalln(s, "Could not start ssh session")
 		return nil, nil
 	}
 
-	m := models.CreateWelcomePage() // Sets m as our created welcome page
+	// First model user sees when connecting
+	// Model controls connections from there
+	m := models.CreateWelcomePage()
 
-	return m, []tea.ProgramOption{tea.WithAltScreen()} // Puts our program in full screen mode
+	// Returns our model in full screen mode
+	return m, []tea.ProgramOption{tea.WithAltScreen()}
 }
