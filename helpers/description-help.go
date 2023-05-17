@@ -1,6 +1,4 @@
-/* The help model for the About Page
-Declares the keymap struct and all the keys used for
-just the project page */
+/* The help model for the Description Page */
 
 package helpers
 

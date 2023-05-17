@@ -1,3 +1,5 @@
+/* styling for description styling only */
+
 package styling
 
 import "github.com/charmbracelet/lipgloss"
